@@ -1,0 +1,205 @@
+<svg width="256" height="256" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Bronze gradients -->
+        <linearGradient id="bronzeMain" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#e8c547"/>
+            <stop offset="20%" style="stop-color:#d4a853"/>
+            <stop offset="50%" style="stop-color:#b8860b"/>
+            <stop offset="80%" style="stop-color:#8b6914"/>
+            <stop offset="100%" style="stop-color:#654a0e"/>
+        </linearGradient>
+        <linearGradient id="bronzeLeft" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#d4a853"/>
+            <stop offset="100%" style="stop-color:#5a3810"/>
+        </linearGradient>
+        <linearGradient id="bronzeRight" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#d4a853"/>
+            <stop offset="100%" style="stop-color:#5a3810"/>
+        </linearGradient>
+        <linearGradient id="bronzeCenter" x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" style="stop-color:#f5d67b"/>
+            <stop offset="30%" style="stop-color:#d4a853"/>
+            <stop offset="100%" style="stop-color:#8b6914"/>
+        </linearGradient>
+        <!-- Black plume -->
+        <linearGradient id="plumeGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+            <stop offset="0%" style="stop-color:#1a1a1a"/>
+            <stop offset="50%" style="stop-color:#2d2d2d"/>
+            <stop offset="100%" style="stop-color:#0a0a0a"/>
+        </linearGradient>
+        <!-- Bright electric tree/thought gradients -->
+        <linearGradient id="treeCore" x1="50%" y1="100%" x2="50%" y2="0%">
+            <stop offset="0%" style="stop-color:#ff5500"/>
+            <stop offset="30%" style="stop-color:#ffaa00"/>
+            <stop offset="70%" style="stop-color:#ffee00"/>
+            <stop offset="100%" style="stop-color:#ffffcc"/>
+        </linearGradient>
+        <!-- Strong outer glow for tree -->
+        <filter id="treeGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="blur1"/>
+            <feGaussianBlur stdDeviation="2" result="blur2"/>
+            <feMerge>
+                <feMergeNode in="blur1"/>
+                <feMergeNode in="blur2"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <!-- Extra intense node glow -->
+        <filter id="nodeGlow" x="-150%" y="-150%" width="400%" height="400%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <filter id="shadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.6"/>
+        </filter>
+    </defs>
+    
+    <!-- Background circle -->
+    <circle cx="64" cy="66" r="62" fill="#060404"/>
+    
+    <!-- ===== HORSEHAIR PLUME (narrow sharp crest) ===== -->
+    <g filter="url(#shadow)">
+        <!-- Plume crest mount -->
+        <polygon points="64,18 60,24 68,24" fill="#8b6914" stroke="#654a0e" stroke-width="1"/>
+        
+        <!-- Main plume - narrow pointed -->
+        <polygon points="64,6 60,10 60,24 64,20 68,24 68,10" fill="url(#plumeGrad)"/>
+        
+        <!-- Plume texture -->
+        <line x1="62" y1="8" x2="62" y2="22" stroke="#3a3a3a" stroke-width="0.6"/>
+        <line x1="64" y1="6" x2="64" y2="20" stroke="#404040" stroke-width="0.6"/>
+        <line x1="66" y1="8" x2="66" y2="22" stroke="#3a3a3a" stroke-width="0.6"/>
+    </g>
+    
+    <!-- ===== HELMET DOME (NARROW - sharp angular) ===== -->
+    <g filter="url(#shadow)">
+        <!-- Main dome - narrow sharp shape -->
+        <polygon points="64,16 
+                         42,40 
+                         34,62 
+                         34,76 
+                         40,78 
+                         48,74 
+                         52,96 
+                         64,106 
+                         76,96 
+                         80,74 
+                         88,78 
+                         94,76 
+                         94,62 
+                         86,40" 
+                fill="url(#bronzeMain)" stroke="#654a0e" stroke-width="2" stroke-linejoin="miter"/>
+        
+        <!-- Forehead highlight -->
+        <polygon points="64,20 50,42 64,36 78,42" fill="url(#bronzeCenter)" opacity="0.25"/>
+    </g>
+    
+    <!-- ===== LEFT CHEEK GUARD (narrow blade) ===== -->
+    <polygon points="34,60 
+                     28,74 
+                     38,120 
+                     50,74 
+                     48,60" 
+            fill="url(#bronzeLeft)" stroke="#654a0e" stroke-width="1.5" stroke-linejoin="miter"/>
+    <line x1="30" y1="70" x2="38" y2="116" stroke="#f5d67b" stroke-width="1" opacity="0.35"/>
+    
+    <!-- ===== RIGHT CHEEK GUARD (narrow blade) ===== -->
+    <polygon points="94,60 
+                     100,74 
+                     90,120 
+                     78,74 
+                     80,60" 
+            fill="url(#bronzeRight)" stroke="#654a0e" stroke-width="1.5" stroke-linejoin="miter"/>
+    <line x1="98" y1="70" x2="90" y2="116" stroke="#f5d67b" stroke-width="1" opacity="0.35"/>
+    
+    <!-- ===== T-VISOR OPENING ===== -->
+    <!-- Eye slit -->
+    <polygon points="46,72 82,72 84,82 44,82" fill="#040303"/>
+    
+    <!-- Nose/chin opening -->
+    <polygon points="54,82 74,82 68,104 64,110 60,104" fill="#040303"/>
+    
+    <!-- Nose guard -->
+    <polygon points="60,72 68,72 66,88 62,88" fill="url(#bronzeCenter)" stroke="#654a0e" stroke-width="1"/>
+    
+    <!-- Eye shadows -->
+    <polygon points="48,74 60,74 60,80 46,80" fill="#020202"/>
+    <polygon points="68,74 80,74 82,80 68,80" fill="#020202"/>
+    
+    <!-- ===== THOUGHT TREE - PROMINENT GLOWING STRUCTURE ===== -->
+    
+    <!-- Outer glow aura (largest, dimmest) -->
+    <g opacity="0.3" filter="url(#treeGlow)">
+        <circle cx="64" cy="30" r="10" fill="#ff4400"/>
+        <circle cx="50" cy="52" r="8" fill="#ff6600"/>
+        <circle cx="78" cy="52" r="8" fill="#ff6600"/>
+        <circle cx="40" cy="68" r="6" fill="#ff8800"/>
+        <circle cx="56" cy="68" r="6" fill="#ff8800"/>
+        <circle cx="72" cy="68" r="6" fill="#ff8800"/>
+        <circle cx="88" cy="68" r="6" fill="#ff8800"/>
+    </g>
+    
+    <!-- Middle glow layer -->
+    <g opacity="0.5" filter="url(#nodeGlow)">
+        <circle cx="64" cy="30" r="7" fill="#ff6600"/>
+        <line x1="64" y1="37" x2="64" y2="44" stroke="#ffaa00" stroke-width="5"/>
+        <line x1="64" y1="44" x2="50" y2="52" stroke="#ffaa00" stroke-width="4"/>
+        <line x1="64" y1="44" x2="78" y2="52" stroke="#ffaa00" stroke-width="4"/>
+        <circle cx="50" cy="52" r="6" fill="#ff8800"/>
+        <circle cx="78" cy="52" r="6" fill="#ff8800"/>
+        <line x1="50" y1="58" x2="40" y2="68" stroke="#ffcc00" stroke-width="3"/>
+        <line x1="50" y1="58" x2="56" y2="68" stroke="#ffcc00" stroke-width="3"/>
+        <line x1="78" y1="58" x2="72" y2="68" stroke="#ffcc00" stroke-width="3"/>
+        <line x1="78" y1="58" x2="88" y2="68" stroke="#ffcc00" stroke-width="3"/>
+        <circle cx="40" cy="68" r="5" fill="#ffaa00"/>
+        <circle cx="56" cy="68" r="5" fill="#ffaa00"/>
+        <circle cx="72" cy="68" r="5" fill="#ffaa00"/>
+        <circle cx="88" cy="68" r="5" fill="#ffaa00"/>
+    </g>
+    
+    <!-- Core tree structure (brightest) -->
+    <g>
+        <!-- Root node - thought origin -->
+        <circle cx="64" cy="30" r="6" fill="url(#treeCore)" stroke="#ffff88" stroke-width="1"/>
+        
+        <!-- Main trunk -->
+        <line x1="64" y1="36" x2="64" y2="44" stroke="url(#treeCore)" stroke-width="4" stroke-linecap="round"/>
+        
+        <!-- Level 1 branches -->
+        <line x1="64" y1="44" x2="50" y2="52" stroke="url(#treeCore)" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="64" y1="44" x2="78" y2="52" stroke="url(#treeCore)" stroke-width="3.5" stroke-linecap="round"/>
+        
+        <!-- Level 1 nodes -->
+        <circle cx="50" cy="52" r="5" fill="url(#treeCore)" stroke="#ffff88" stroke-width="0.8"/>
+        <circle cx="78" cy="52" r="5" fill="url(#treeCore)" stroke="#ffff88" stroke-width="0.8"/>
+        
+        <!-- Level 2 branches -->
+        <line x1="50" y1="57" x2="40" y2="68" stroke="url(#treeCore)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="50" y1="57" x2="56" y2="68" stroke="url(#treeCore)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="78" y1="57" x2="72" y2="68" stroke="url(#treeCore)" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="78" y1="57" x2="88" y2="68" stroke="url(#treeCore)" stroke-width="2.5" stroke-linecap="round"/>
+        
+        <!-- Level 2 leaf nodes -->
+        <circle cx="40" cy="68" r="4" fill="url(#treeCore)" stroke="#ffff88" stroke-width="0.6"/>
+        <circle cx="56" cy="68" r="4" fill="url(#treeCore)" stroke="#ffff88" stroke-width="0.6"/>
+        <circle cx="72" cy="68" r="4" fill="url(#treeCore)" stroke="#ffff88" stroke-width="0.6"/>
+        <circle cx="88" cy="68" r="4" fill="url(#treeCore)" stroke="#ffff88" stroke-width="0.6"/>
+    </g>
+    
+    <!-- Bright white-hot centers -->
+    <circle cx="64" cy="30" r="2.5" fill="#ffffee"/>
+    <circle cx="50" cy="52" r="2" fill="#ffffee"/>
+    <circle cx="78" cy="52" r="2" fill="#ffffee"/>
+    <circle cx="40" cy="68" r="1.5" fill="#ffffee"/>
+    <circle cx="56" cy="68" r="1.5" fill="#ffffee"/>
+    <circle cx="72" cy="68" r="1.5" fill="#ffffee"/>
+    <circle cx="88" cy="68" r="1.5" fill="#ffffee"/>
+    
+    <!-- Helmet edge highlights -->
+    <line x1="44" y1="40" x2="64" y2="18" stroke="#f5d67b" stroke-width="1" opacity="0.3"/>
+    <line x1="84" y1="40" x2="64" y2="18" stroke="#f5d67b" stroke-width="1" opacity="0.3"/>
+</svg>
