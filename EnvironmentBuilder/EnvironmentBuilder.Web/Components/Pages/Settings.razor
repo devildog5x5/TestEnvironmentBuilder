@@ -1,0 +1,203 @@
+@page "/settings"
+@inject ApiService Api
+@rendermode InteractiveServer
+
+<PageTitle>Settings</PageTitle>
+
+<div class="settings-page">
+    <h2>⚙️ Settings</h2>
+
+    <section class="settings-section">
+        <h3>Default Connection</h3>
+        <p class="section-description">Configure default LDAP connection settings</p>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Server Address</label>
+                <input type="text" @bind="settings.Server" placeholder="localhost" />
+            </div>
+            <div class="form-group">
+                <label>Port</label>
+                <input type="number" @bind="settings.Port" />
+            </div>
+            <div class="form-group">
+                <label>Bind DN</label>
+                <input type="text" @bind="settings.BindDn" placeholder="cn=admin,o=org" />
+            </div>
+            <div class="form-group">
+                <label>Default Password</label>
+                <input type="password" @bind="settings.DefaultPassword" />
+            </div>
+            <div class="form-group full-width">
+                <label>Base DN</label>
+                <input type="text" @bind="settings.BaseDn" placeholder="o=org" />
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" @bind="settings.UseSsl" />
+                    Use SSL/TLS
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <h3>User Generation Defaults</h3>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Username Prefix</label>
+                <input type="text" @bind="settings.UserPrefix" placeholder="testuser" />
+            </div>
+            <div class="form-group">
+                <label>Starting Number</label>
+                <input type="number" @bind="settings.StartNumber" min="1" />
+            </div>
+            <div class="form-group">
+                <label>Default Password</label>
+                <input type="text" @bind="settings.UserPassword" placeholder="Test123!" />
+            </div>
+            <div class="form-group">
+                <label>User Container</label>
+                <input type="text" @bind="settings.UserContainer" placeholder="ou=users" />
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <h3>Execution Defaults</h3>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Batch Size</label>
+                <input type="number" @bind="settings.BatchSize" min="1" max="1000" />
+            </div>
+            <div class="form-group">
+                <label>Parallel Operations</label>
+                <input type="number" @bind="settings.ParallelOperations" min="1" max="32" />
+            </div>
+            <div class="form-group">
+                <label>Delay Between Batches (ms)</label>
+                <input type="number" @bind="settings.DelayMs" min="0" />
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" @bind="settings.ValidateAfterCreate" />
+                    Validate after creation
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <h3>Output Settings</h3>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" @bind="settings.GenerateLdif" />
+                    Generate LDIF files
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" @bind="settings.GenerateReport" />
+                    Generate HTML reports
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" @bind="settings.ExportCsv" />
+                    Export to CSV
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <div class="settings-actions">
+        <button class="btn-primary" @onclick="SaveSettings">
+            💾 Save Settings
+        </button>
+        <button class="btn-secondary" @onclick="ResetDefaults">
+            Reset to Defaults
+        </button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(saveMessage))
+    {
+        <div class="save-message @(saveSuccess ? "success" : "error")">
+            @saveMessage
+        </div>
+    }
+</div>
+
+@code {
+    private AppSettings settings = new();
+    private string saveMessage = "";
+    private bool saveSuccess = false;
+
+    protected override void OnInitialized()
+    {
+        LoadSettings();
+    }
+
+    private void LoadSettings()
+    {
+        // In a real app, this would load from localStorage or a config file
+        settings = new AppSettings
+        {
+            Server = "localhost",
+            Port = 389,
+            BindDn = "cn=admin,o=org",
+            BaseDn = "o=org",
+            UseSsl = false,
+            UserPrefix = "testuser",
+            StartNumber = 1,
+            UserPassword = "Test123!",
+            UserContainer = "ou=users",
+            BatchSize = 25,
+            ParallelOperations = 4,
+            DelayMs = 100,
+            ValidateAfterCreate = true,
+            GenerateLdif = true,
+            GenerateReport = true,
+            ExportCsv = false
+        };
+    }
+
+    private void SaveSettings()
+    {
+        // In a real app, this would persist to localStorage or a config file
+        saveSuccess = true;
+        saveMessage = "Settings saved successfully!";
+    }
+
+    private void ResetDefaults()
+    {
+        LoadSettings();
+        saveMessage = "Settings reset to defaults";
+        saveSuccess = true;
+    }
+
+    private class AppSettings
+    {
+        public string Server { get; set; } = "localhost";
+        public int Port { get; set; } = 389;
+        public string BindDn { get; set; } = "";
+        public string DefaultPassword { get; set; } = "";
+        public string BaseDn { get; set; } = "";
+        public bool UseSsl { get; set; }
+        public string UserPrefix { get; set; } = "testuser";
+        public int StartNumber { get; set; } = 1;
+        public string UserPassword { get; set; } = "";
+        public string UserContainer { get; set; } = "";
+        public int BatchSize { get; set; } = 25;
+        public int ParallelOperations { get; set; } = 4;
+        public int DelayMs { get; set; } = 100;
+        public bool ValidateAfterCreate { get; set; }
+        public bool GenerateLdif { get; set; }
+        public bool GenerateReport { get; set; }
+        public bool ExportCsv { get; set; }
+    }
+}
+

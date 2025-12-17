@@ -1,0 +1,150 @@
+@page "/"
+@inject ApiService Api
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Environment Builder - Dashboard</PageTitle>
+
+<div class="dashboard">
+    <section class="hero-section">
+        <h2>🛡️ Test Environment Command Center</h2>
+        <p>Build, manage, and monitor your LDAP test environments with precision.</p>
+    </section>
+
+    <section class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-cards">
+            <div class="action-card" @onclick="GoToBuild">
+                <div class="card-icon">🏗️</div>
+                <h4>Build Environment</h4>
+                <p>Create a new test environment with users and structure</p>
+            </div>
+            <div class="action-card" @onclick="GoToCleanup">
+                <div class="card-icon">🧹</div>
+                <h4>Cleanup</h4>
+                <p>Remove test users and clean up environments</p>
+            </div>
+            <div class="action-card" @onclick="CheckHealth">
+                <div class="card-icon">💓</div>
+                <h4>Health Check</h4>
+                <p>Verify LDAP server connectivity and status</p>
+            </div>
+            <div class="action-card" @onclick="GoToOperations">
+                <div class="card-icon">📊</div>
+                <h4>View Operations</h4>
+                <p>Monitor running and completed operations</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="presets-section">
+        <h3>Complexity Presets</h3>
+        <div class="preset-cards">
+            @foreach (var preset in presets)
+            {
+                <div class="preset-card @preset.Name.ToLower()">
+                    <div class="preset-header">
+                        <span class="preset-name">@preset.Name</span>
+                        <span class="preset-users">@preset.Users users</span>
+                    </div>
+                    <p class="preset-description">@preset.Description</p>
+                    <button class="btn-primary" @onclick="() => StartBuild(preset.Name)">
+                        Build @preset.Name
+                    </button>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="recent-operations">
+        <h3>Recent Operations</h3>
+        @if (operations.Any())
+        {
+            <div class="operations-list">
+                @foreach (var op in operations.Take(5))
+                {
+                    <div class="operation-item @op.Status.ToLower()">
+                        <span class="op-type">@op.Type</span>
+                        <span class="op-status">@op.Status</span>
+                        <span class="op-time">@op.StartTime.ToString("g")</span>
+                        @if (op.CurrentProgress != null)
+                        {
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: @op.CurrentProgress.PercentComplete%"></div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="no-operations">No recent operations. Start by building an environment!</p>
+        }
+    </section>
+
+    @if (showHealthResult)
+    {
+        <div class="modal-overlay" @onclick="() => showHealthResult = false">
+            <div class="modal-content" @onclick:stopPropagation>
+                <h3>Health Check Results</h3>
+                @if (healthResult != null)
+                {
+                    <div class="health-status @(healthResult.IsHealthy ? "healthy" : "unhealthy")">
+                        @(healthResult.IsHealthy ? "✓ Healthy" : "✗ Unhealthy")
+                    </div>
+                    <ul class="health-checks">
+                        <li class="@(healthResult.CanConnect ? "pass" : "fail")">
+                            Connection: @(healthResult.CanConnect ? "✓" : "✗")
+                        </li>
+                        <li class="@(healthResult.CanAuthenticate ? "pass" : "fail")">
+                            Authentication: @(healthResult.CanAuthenticate ? "✓" : "✗")
+                        </li>
+                        <li class="@(healthResult.CanRead ? "pass" : "fail")">
+                            Read Access: @(healthResult.CanRead ? "✓" : "✗")
+                        </li>
+                        <li>Response Time: @healthResult.ResponseTimeMs ms</li>
+                    </ul>
+                }
+                else
+                {
+                    <p>Checking health...</p>
+                }
+                <button class="btn-secondary" @onclick="() => showHealthResult = false">Close</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<PresetInfo> presets = new();
+    private List<OperationStatus> operations = new();
+    private HealthCheckResult? healthResult;
+    private bool showHealthResult = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        presets = await Api.GetPresetsAsync();
+        operations = await Api.GetOperationsAsync();
+    }
+
+    private void GoToBuild() => Navigation.NavigateTo("/build");
+    private void GoToCleanup() => Navigation.NavigateTo("/build?action=cleanup");
+    private void GoToOperations() => Navigation.NavigateTo("/operations");
+    
+    private void StartBuild(string preset)
+    {
+        Navigation.NavigateTo($"/build?preset={preset.ToLower()}");
+    }
+
+    private async Task CheckHealth()
+    {
+        showHealthResult = true;
+        healthResult = null;
+        StateHasChanged();
+
+        healthResult = await Api.HealthCheckAsync(new ConnectionInfo());
+        StateHasChanged();
+    }
+}
+

@@ -1,0 +1,137 @@
+@page "/operations"
+@inject ApiService Api
+@inject SignalRService SignalR
+@rendermode InteractiveServer
+
+<PageTitle>Operations</PageTitle>
+
+<div class="operations-page">
+    <h2>📊 Operations Monitor</h2>
+
+    <div class="operations-controls">
+        <button class="btn-secondary" @onclick="RefreshOperations">
+            🔄 Refresh
+        </button>
+        <span class="auto-refresh">
+            <input type="checkbox" @bind="autoRefresh" id="autoRefresh" />
+            <label for="autoRefresh">Auto-refresh</label>
+        </span>
+    </div>
+
+    @if (operations.Any())
+    {
+        <div class="operations-grid">
+            @foreach (var op in operations)
+            {
+                <div class="operation-card @op.Status.ToLower()">
+                    <div class="op-header">
+                        <span class="op-type-badge @op.Type.ToLower()">@op.Type</span>
+                        <span class="op-status-badge @op.Status.ToLower()">@op.Status</span>
+                    </div>
+
+                    <div class="op-id">@op.Id[..8]...</div>
+
+                    <div class="op-times">
+                        <div>Started: @op.StartTime.ToString("g")</div>
+                        @if (op.EndTime.HasValue)
+                        {
+                            <div>Ended: @op.EndTime.Value.ToString("g")</div>
+                            <div>Duration: @((op.EndTime.Value - op.StartTime).TotalSeconds.ToString("F1"))s</div>
+                        }
+                    </div>
+
+                    @if (op.CurrentProgress != null && op.Status == "Running")
+                    {
+                        <div class="op-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: @op.CurrentProgress.PercentComplete%"></div>
+                            </div>
+                            <span class="progress-text">
+                                @op.CurrentProgress.CurrentItem / @op.CurrentProgress.TotalItems
+                                (@op.CurrentProgress.PercentComplete.ToString("F1")%)
+                            </span>
+                            <span class="progress-speed">
+                                @op.CurrentProgress.ItemsPerSecond.ToString("F1") items/sec
+                            </span>
+                        </div>
+                    }
+
+                    <div class="op-actions">
+                        @if (op.Status == "Running")
+                        {
+                            <button class="btn-danger btn-small" @onclick="() => CancelOperation(op.Id)">
+                                Cancel
+                            </button>
+                        }
+                        <button class="btn-secondary btn-small" @onclick="() => ToggleLogs(op.Id)">
+                            @(expandedLogs.Contains(op.Id) ? "Hide Logs" : "Show Logs")
+                        </button>
+                    </div>
+
+                    @if (expandedLogs.Contains(op.Id) && op.Logs.Any())
+                    {
+                        <div class="op-logs">
+                            @foreach (var log in op.Logs.TakeLast(10))
+                            {
+                                <div class="log-line">@log</div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="no-operations">
+            <p>No operations found.</p>
+            <p>Start by building a new environment!</p>
+        </div>
+    }
+</div>
+
+@code {
+    private List<OperationStatus> operations = new();
+    private HashSet<string> expandedLogs = new();
+    private bool autoRefresh = true;
+    private Timer? refreshTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshOperations();
+        
+        refreshTimer = new Timer(async _ =>
+        {
+            if (autoRefresh)
+            {
+                await RefreshOperations();
+                await InvokeAsync(StateHasChanged);
+            }
+        }, null, 5000, 5000);
+    }
+
+    private async Task RefreshOperations()
+    {
+        operations = await Api.GetOperationsAsync();
+    }
+
+    private async Task CancelOperation(string operationId)
+    {
+        await Api.CancelOperationAsync(operationId);
+        await RefreshOperations();
+    }
+
+    private void ToggleLogs(string operationId)
+    {
+        if (expandedLogs.Contains(operationId))
+            expandedLogs.Remove(operationId);
+        else
+            expandedLogs.Add(operationId);
+    }
+
+    public void Dispose()
+    {
+        refreshTimer?.Dispose();
+    }
+}
+

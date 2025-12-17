@@ -1,0 +1,269 @@
+@page "/build"
+@inject ApiService Api
+@inject SignalRService SignalR
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Build Environment</PageTitle>
+
+<div class="build-page">
+    <h2>🏗️ Build Test Environment</h2>
+
+    <div class="build-form">
+        <section class="form-section">
+            <h3>Connection Settings</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Server</label>
+                    <input type="text" @bind="connection.Server" placeholder="localhost" />
+                </div>
+                <div class="form-group">
+                    <label>Port</label>
+                    <input type="number" @bind="connection.Port" />
+                </div>
+                <div class="form-group">
+                    <label>Bind DN</label>
+                    <input type="text" @bind="connection.BindDn" placeholder="cn=admin,o=org" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" @bind="connection.Password" />
+                </div>
+                <div class="form-group full-width">
+                    <label>Base DN</label>
+                    <input type="text" @bind="connection.BaseDn" placeholder="o=org" />
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h3>Complexity Level</h3>
+            <div class="preset-selector">
+                @foreach (var preset in presets)
+                {
+                    <div class="preset-option @(selectedPreset == preset.Name ? "selected" : "")"
+                         @onclick="() => SelectPreset(preset)">
+                        <span class="preset-name">@preset.Name</span>
+                        <span class="preset-users">@preset.Users users</span>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h3>User Settings</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Number of Users</label>
+                    <input type="number" @bind="userCount" min="1" max="100000" />
+                </div>
+                <div class="form-group">
+                    <label>Username Prefix</label>
+                    <input type="text" @bind="userPrefix" placeholder="testuser" />
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" @bind="dryRun" />
+                        Dry Run (simulate without changes)
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <div class="form-actions">
+            <button class="btn-primary btn-large" @onclick="StartBuild" disabled="@isBuilding">
+                @if (isBuilding)
+                {
+                    <span>Building...</span>
+                }
+                else
+                {
+                    <span>🛡️ Build Environment</span>
+                }
+            </button>
+            <button class="btn-secondary" @onclick="GoHome">Cancel</button>
+        </div>
+    </div>
+
+    @if (isBuilding || buildComplete)
+    {
+        <div class="build-progress">
+            <h3>Build Progress</h3>
+            
+            <div class="progress-container">
+                <div class="progress-bar-large">
+                    <div class="progress-fill" style="width: @progressPercent%"></div>
+                </div>
+                <span class="progress-text">@progressPercent.ToString("F1")%</span>
+            </div>
+
+            <div class="progress-stats">
+                <div class="stat">
+                    <span class="stat-value">@currentItem</span>
+                    <span class="stat-label">/ @totalItems</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">@itemsPerSecond.ToString("F1")</span>
+                    <span class="stat-label">users/sec</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">@status</span>
+                    <span class="stat-label">status</span>
+                </div>
+            </div>
+
+            <div class="log-output">
+                <h4>Log Output</h4>
+                <div class="log-container">
+                    @foreach (var log in logs.TakeLast(20))
+                    {
+                        <div class="log-entry">@log</div>
+                    }
+                </div>
+            </div>
+
+            @if (buildComplete)
+            {
+                <div class="build-result @(buildSuccess ? "success" : "error")">
+                    <span class="result-icon">@(buildSuccess ? "✓" : "✗")</span>
+                    <span class="result-message">@resultMessage</span>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public string? Preset { get; set; }
+
+    private ConnectionInfo connection = new();
+    private List<PresetInfo> presets = new();
+    private string selectedPreset = "Simple";
+    private int userCount = 10;
+    private string userPrefix = "testuser";
+    private bool dryRun = false;
+
+    private bool isBuilding = false;
+    private bool buildComplete = false;
+    private bool buildSuccess = false;
+    private string resultMessage = "";
+    private string status = "Pending";
+
+    private double progressPercent = 0;
+    private int currentItem = 0;
+    private int totalItems = 0;
+    private double itemsPerSecond = 0;
+    private List<string> logs = new();
+
+    private string? operationId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        presets = await Api.GetPresetsAsync();
+        
+        if (!string.IsNullOrEmpty(Preset))
+        {
+            var preset = presets.FirstOrDefault(p => p.Name.Equals(Preset, StringComparison.OrdinalIgnoreCase));
+            if (preset != null)
+            {
+                SelectPreset(preset);
+            }
+        }
+
+        // Setup SignalR handlers
+        SignalR.OnProgressUpdate += HandleProgress;
+        SignalR.OnLogMessage += HandleLog;
+        SignalR.OnOperationComplete += HandleComplete;
+        
+        await SignalR.ConnectAsync();
+    }
+
+    private void SelectPreset(PresetInfo preset)
+    {
+        selectedPreset = preset.Name;
+        userCount = preset.Users;
+    }
+
+    private async Task StartBuild()
+    {
+        isBuilding = true;
+        buildComplete = false;
+        logs.Clear();
+        status = "Starting";
+        StateHasChanged();
+
+        var request = new BuildRequest
+        {
+            Preset = selectedPreset.ToLower(),
+            Server = connection.Server,
+            Port = connection.Port,
+            BindDn = connection.BindDn,
+            Password = connection.Password,
+            BaseDn = connection.BaseDn,
+            UserCount = userCount,
+            UserPrefix = userPrefix,
+            DryRun = dryRun
+        };
+
+        var result = await Api.StartBuildAsync(request);
+        
+        if (result != null)
+        {
+            operationId = result.OperationId;
+            await SignalR.JoinOperationAsync(operationId);
+            logs.Add($"Build started: {result.Message}");
+            status = "Running";
+            totalItems = userCount;
+        }
+        else
+        {
+            isBuilding = false;
+            buildComplete = true;
+            buildSuccess = false;
+            resultMessage = "Failed to start build operation";
+        }
+        
+        StateHasChanged();
+    }
+
+    private void HandleProgress(ProgressUpdate update)
+    {
+        if (update.OperationId == operationId)
+        {
+            currentItem = update.CurrentItem;
+            totalItems = update.TotalItems;
+            progressPercent = update.PercentComplete;
+            itemsPerSecond = update.ItemsPerSecond;
+            status = update.Status;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void HandleLog(string message)
+    {
+        logs.Add(message);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleComplete(OperationResult result)
+    {
+        isBuilding = false;
+        buildComplete = true;
+        buildSuccess = result.Success;
+        resultMessage = result.Message;
+        status = result.Success ? "Completed" : "Failed";
+        progressPercent = 100;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void GoHome() => Navigation.NavigateTo("/");
+
+    public void Dispose()
+    {
+        SignalR.OnProgressUpdate -= HandleProgress;
+        SignalR.OnLogMessage -= HandleLog;
+        SignalR.OnOperationComplete -= HandleComplete;
+    }
+}
+
