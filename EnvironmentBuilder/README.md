@@ -1,157 +1,228 @@
-# Environment Builder ⚔️
+# Environment Builder ⚔️🛡️
 
 **Modern test environment creation tool - Evolved from TreeBuilder 3.4**
 
-*Built by Robert Foster - Test Brutally*
-
-![Environment Builder](EnvironmentBuilderApp/Resources/TestTree.svg)
+*Built by Robert Foster - Test Brutally - Build Your Level of Complexity*
 
 ## Overview
 
-Environment Builder is a modern Windows application for creating LDAP directory structures, users, and home directories for test environments. It evolved from the legacy TreeBuilder 3.4 VB6 application with a completely rewritten modern C# WPF codebase.
+Environment Builder is a comprehensive suite for creating LDAP directory structures, users, and home directories for test environments. It evolved from the legacy TreeBuilder 3.4 VB6 application into a modern multi-project solution with CLI, REST API, Web Dashboard, and WPF desktop application.
 
-## Features
+## 🏗️ Project Components
 
-### Core Functionality (from TreeBuilder)
+| Component | Description | Technology |
+|-----------|-------------|------------|
+| **EnvironmentBuilderApp** | Desktop GUI application | WPF (.NET 8.0) |
+| **EnvironmentBuilder.CLI** | Command-line interface | Console (.NET 8.0) |
+| **EnvironmentBuilder.API** | REST API with real-time updates | ASP.NET Core + SignalR |
+| **EnvironmentBuilder.Web** | Web Dashboard | Blazor Server |
+| **EnvironmentBuilder.Core** | Shared library | .NET 8.0 Class Library |
+
+## ✨ Features
+
+### Core Functionality
 - ✅ **LDAP Connection Management** - Connect to LDAP/Active Directory servers
-- ✅ **User Bulk Creation** - Create multiple users with customizable templates
+- ✅ **User Bulk Creation** - Create multiple users with realistic test data
 - ✅ **Tree/Container Configuration** - Build organizational unit hierarchies
 - ✅ **Home Directory Setup** - Create user home directories
 - ✅ **LDIF File Generation** - Create LDIF files for import operations
 - ✅ **Configuration Save/Load** - Save and restore environment configurations
 
+### Complexity Presets
+| Preset | Users | Description |
+|--------|-------|-------------|
+| 🟢 **Simple** | 10 | Quick setup for basic testing |
+| 🔵 **Medium** | 100 | Standard test environment with nested OUs |
+| 🟡 **Complex** | 1,000 | Enterprise-scale testing with deep hierarchy |
+| 🔴 **Brutal** | 10,000+ | Stress test with maximum complexity |
+
 ### New Features
-- 🆕 **Modern WPF UI** - Dark theme with Spartan warrior aesthetic
-- 🆕 **JSON Configuration** - Modern JSON-based configuration files
-- 🆕 **Multiple User Sets** - Support for multiple user configuration sets
-- 🆕 **Environment Presets** - Quick templates for common scenarios
-- 🆕 **Progress Tracking** - Real-time progress and logging
-- 🆕 **Async Operations** - Non-blocking UI during long operations
-- 🆕 **Serilog Logging** - Comprehensive file logging
+- 🆕 **Realistic Data Generation** - Uses Bogus library for realistic user data
+- 🆕 **CLI Support** - Full command-line interface for automation
+- 🆕 **REST API** - Programmatic control via REST endpoints
+- 🆕 **Web Dashboard** - Browser-based monitoring and control
+- 🆕 **Real-time Progress** - SignalR-powered live updates
+- 🆕 **Health Checks** - Validate server connectivity
+- 🆕 **Cleanup/Teardown** - Remove test users after testing
+- 🆕 **HTML/CSV/JSON Reports** - Export detailed reports
+- 🆕 **Parallel Operations** - Configurable parallelism for speed
+- 🆕 **User Archetypes** - Generate executives, developers, support staff, etc.
 
-## System Requirements
+## 🚀 Quick Start
 
+### Option 1: Desktop App
+```powershell
+cd EnvironmentBuilder
+dotnet run --project EnvironmentBuilderApp
+```
+
+### Option 2: CLI
+```powershell
+# Build a simple environment
+envbuilder build --preset simple --server localhost --port 389 --bind-dn "cn=admin,o=org" --password secret
+
+# Build 1000 users with realistic data
+envbuilder build --preset complex --users 1000 --prefix testuser --dry-run
+
+# Cleanup test users
+envbuilder cleanup --prefix testuser --force
+
+# Check server health
+envbuilder health --server ldap.example.com
+```
+
+### Option 3: REST API
+```powershell
+# Start the API
+dotnet run --project EnvironmentBuilder.API
+
+# POST to start a build
+curl -X POST http://localhost:5000/api/environment/build \
+  -H "Content-Type: application/json" \
+  -d '{"preset":"medium","server":"localhost","userCount":100}'
+```
+
+### Option 4: Web Dashboard
+```powershell
+# Start both API and Web
+dotnet run --project EnvironmentBuilder.API &
+dotnet run --project EnvironmentBuilder.Web
+# Open http://localhost:5001
+```
+
+## 📦 Installation
+
+### Prerequisites
 - Windows 10/11 (64-bit)
-- .NET 8.0 Runtime (included in self-contained build)
-- Network access to target LDAP server
+- .NET 8.0 SDK or Runtime
 
-## Installation
-
-### Option 1: Installer
+### From Installer
 1. Run `EnvironmentBuilderSetup.exe`
 2. Follow the installation wizard
 3. Launch from Start Menu or Desktop shortcut
 
-### Option 2: Portable
-1. Extract the publish folder contents
-2. Run `EnvironmentBuilderApp.exe`
+### From Source
+```powershell
+git clone https://github.com/devildog5x5/TestEnvironmentBuilder.git
+cd TestEnvironmentBuilder/EnvironmentBuilder
+dotnet restore
+dotnet build
+```
 
-## Quick Start
+## 🔧 Configuration
 
-1. **Connection Tab**: Enter your LDAP server details
-   - Server Address (IP or hostname)
-   - Port (389 for LDAP, 636 for LDAPS)
-   - Bind DN (admin username)
-   - Password
-
-2. **Users Tab**: Configure user creation
-   - Set username prefix (e.g., "TestUser")
-   - Define start/end numbers
-   - Set default password
-   - Specify user context (container DN)
-
-3. **Output Tab**: Configure LDIF output
-   - Set export file path
-   - Choose write-only or execute mode
-
-4. **Run Update**: Click to build your environment!
-
-## Configuration File Format
-
-Configurations are saved as JSON files:
-
+### JSON Configuration File
 ```json
 {
   "Name": "Test Environment",
+  "ComplexityLevel": "Medium",
   "Connection": {
-    "ServerAddress": "ldap.example.com",
+    "Server": "ldap.example.com",
     "Port": 389,
-    "BindDN": "cn=admin,o=org"
+    "BindDn": "cn=admin,o=org",
+    "BaseDn": "o=org",
+    "UseSsl": false
   },
-  "UserConfigs": [
-    {
-      "SetName": "Test Users",
-      "UserNamePrefix": "TestUser",
-      "StartNumber": 1,
-      "EndNumber": 100,
-      "Password": "Password123!"
-    }
-  ]
+  "Users": {
+    "Count": 100,
+    "Prefix": "testuser",
+    "RandomizeData": true,
+    "DefaultPassword": "Test123!"
+  },
+  "Execution": {
+    "BatchSize": 25,
+    "ParallelOperations": 4,
+    "DryRun": false
+  }
 }
 ```
 
-## Building from Source
-
-### Prerequisites
-- Visual Studio 2022 or VS Code
-- .NET 8.0 SDK
-
-### Build Commands
+### CLI Configuration
 ```powershell
-cd EnvironmentBuilder
-dotnet restore
-dotnet build
-dotnet publish -c Release -r win-x64 --self-contained true
+# Create a configuration file
+envbuilder config init --preset complex --output myenv.json
+
+# Show configuration
+envbuilder config show --file myenv.json
 ```
 
-### Creating Installer
-1. Install [Inno Setup](https://jrsoftware.org/isinfo.php)
-2. Open `Installer/EnvironmentBuilderInstaller.iss`
-3. Compile to create the installer
+## 📊 API Endpoints
 
-## Project Structure
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/environment/build` | Start a build operation |
+| POST | `/api/environment/cleanup` | Start a cleanup operation |
+| GET | `/api/environment/operations` | List all operations |
+| GET | `/api/environment/operations/{id}` | Get operation status |
+| POST | `/api/environment/operations/{id}/cancel` | Cancel operation |
+| POST | `/api/environment/health` | Perform health check |
+| GET | `/api/environment/presets` | Get available presets |
+
+### SignalR Hub
+Connect to `/hubs/progress` for real-time updates:
+- `ProgressUpdate` - Current progress
+- `LogMessage` - Log entries
+- `OperationComplete` - Completion notification
+
+## 📁 Project Structure
 
 ```
 EnvironmentBuilder/
-├── EnvironmentBuilderApp/
+├── EnvironmentBuilder.sln
+├── EnvironmentBuilder.Core/         # Shared library
 │   ├── Models/
-│   │   ├── ConnectionSettings.cs
-│   │   ├── UserConfiguration.cs
-│   │   ├── TreeConfiguration.cs
-│   │   └── EnvironmentConfiguration.cs
+│   │   ├── ComplexityPreset.cs
+│   │   ├── EnvironmentConfig.cs
+│   │   ├── OperationResult.cs
+│   │   └── TestUser.cs
+│   └── Services/
+│       ├── EnvironmentService.cs
+│       ├── TestDataGenerator.cs
+│       └── ReportService.cs
+├── EnvironmentBuilder.CLI/          # Command-line tool
+│   ├── Commands/
+│   └── Program.cs
+├── EnvironmentBuilder.API/          # REST API
+│   ├── Controllers/
+│   ├── Hubs/
+│   └── Services/
+├── EnvironmentBuilder.Web/          # Blazor Dashboard
+│   └── Components/Pages/
+├── EnvironmentBuilderApp/           # WPF Desktop App
+│   ├── Models/
 │   ├── Services/
-│   │   ├── LdapService.cs
-│   │   └── LdifService.cs
 │   ├── ViewModels/
-│   │   └── MainViewModel.cs
-│   ├── Resources/
-│   │   └── TestTree.svg
-│   ├── MainWindow.xaml
-│   └── App.xaml
+│   └── MainWindow.xaml
 ├── Installer/
 │   └── EnvironmentBuilderInstaller.iss
-├── publish/
 └── README.md
 ```
 
-## Technology Stack
+## 🛠️ Technology Stack
 
-- **Framework**: .NET 8.0 WPF
-- **LDAP**: System.DirectoryServices.Protocols
-- **MVVM**: CommunityToolkit.Mvvm
-- **Serialization**: Newtonsoft.Json
-- **Logging**: Serilog
+| Component | Technology |
+|-----------|------------|
+| Framework | .NET 8.0 |
+| Desktop UI | WPF |
+| Web UI | Blazor Server |
+| API | ASP.NET Core |
+| Real-time | SignalR |
+| Data Generation | Bogus |
+| LDAP | System.DirectoryServices.Protocols |
+| MVVM | CommunityToolkit.Mvvm |
+| CLI | System.CommandLine |
+| Console UI | Spectre.Console |
+| Serialization | Newtonsoft.Json |
+| Logging | Serilog |
 
-## History
+## 📜 History
 
-This project is a modernization of TreeBuilder 3.4, originally created in Visual Basic 6 for creating Novell NDS/eDirectory test environments via ICE.EXE and LDIF files. The new version uses modern .NET technologies while preserving the core functionality.
+This project is a modernization of TreeBuilder 3.4, originally created in Visual Basic 6 for creating Novell NDS/eDirectory test environments via ICE.EXE and LDIF files. The new version uses modern .NET technologies while preserving and expanding the core functionality.
 
-## License
+## 📄 License
 
 Copyright © 2024 Robert Foster. All rights reserved.
 
-## Acknowledgments
+---
 
-- Original TreeBuilder 3.4 architecture
-- Test Brutally: *Build Your Level of Complexity*
-
+**Test Brutally - Build Your Level of Complexity** 🛡️⚔️
