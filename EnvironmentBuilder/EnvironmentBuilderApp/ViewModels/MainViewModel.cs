@@ -91,12 +91,27 @@ namespace EnvironmentBuilderApp.ViewModels
         private string _reportContent = "Select a report to view its contents.";
         private string _validationSummary = "";
         
+        // Import/Export
+        private string _importFilePath = "";
+        private int _exportUserCount = 100;
+        private string _selectedExportFormat = "Standard CSV";
+        
+        // Services
+        private readonly Services.TestDataGenerator _dataGenerator = new();
+        private readonly Services.TestScenarioService _scenarioService;
+        private readonly Services.CsvImportExportService _csvService = new();
+        private readonly Services.PerformanceTracker _perfTracker = new();
+        private readonly Services.AuditLogService _auditLog = new();
+        
         #endregion
 
         #region Constructor
         
         public MainViewModel()
         {
+            // Initialize services
+            _scenarioService = new Services.TestScenarioService(_dataGenerator, _perfTracker);
+            
             // Initialize collections
             LiveLog = new ObservableCollection<string>();
             ValidationResults = new ObservableCollection<ValidationResult>();
@@ -444,6 +459,28 @@ namespace EnvironmentBuilderApp.ViewModels
         
         #endregion
 
+        #region Properties - Import/Export
+        
+        public string ImportFilePath
+        {
+            get => _importFilePath;
+            set { _importFilePath = value; OnPropertyChanged(); }
+        }
+        
+        public int ExportUserCount
+        {
+            get => _exportUserCount;
+            set { _exportUserCount = value; OnPropertyChanged(); }
+        }
+        
+        public string SelectedExportFormat
+        {
+            get => _selectedExportFormat;
+            set { _selectedExportFormat = value; OnPropertyChanged(); }
+        }
+        
+        #endregion
+
         #region Commands
         
         public ICommand? SelectPresetCommand { get; private set; }
@@ -463,6 +500,17 @@ namespace EnvironmentBuilderApp.ViewModels
         public ICommand? LoadConfigCommand { get; private set; }
         public ICommand? SaveConfigCommand { get; private set; }
         
+        // New commands for enhanced features
+        public ICommand? RunScenarioCommand { get; private set; }
+        public ICommand? BrowseImportFileCommand { get; private set; }
+        public ICommand? ValidateCsvCommand { get; private set; }
+        public ICommand? ImportUsersCommand { get; private set; }
+        public ICommand? DownloadTemplateCommand { get; private set; }
+        public ICommand? ExportUsersCommand { get; private set; }
+        public ICommand? ExportAllFormatsCommand { get; private set; }
+        public ICommand? CopyCredentialsCommand { get; private set; }
+        public ICommand? GetRandomUserCommand { get; private set; }
+        
         private void InitializeCommands()
         {
             SelectPresetCommand = new RelayCommand<string>(SelectPreset);
@@ -481,6 +529,17 @@ namespace EnvironmentBuilderApp.ViewModels
             ExportPdfCommand = new RelayCommand(ExportPdf, () => SelectedReport != null);
             LoadConfigCommand = new RelayCommand(LoadConfig);
             SaveConfigCommand = new RelayCommand(SaveConfig);
+            
+            // New enhanced commands
+            RunScenarioCommand = new RelayCommand<string>(async (s) => await RunScenarioAsync(s), (s) => !IsProcessing);
+            BrowseImportFileCommand = new RelayCommand(BrowseImportFile);
+            ValidateCsvCommand = new RelayCommand(async () => await ValidateCsvAsync(), () => !string.IsNullOrEmpty(ImportFilePath));
+            ImportUsersCommand = new RelayCommand(async () => await ImportUsersAsync(), () => !string.IsNullOrEmpty(ImportFilePath));
+            DownloadTemplateCommand = new RelayCommand(DownloadTemplate);
+            ExportUsersCommand = new RelayCommand(async () => await ExportUsersAsync());
+            ExportAllFormatsCommand = new RelayCommand(async () => await ExportAllFormatsAsync());
+            CopyCredentialsCommand = new RelayCommand<string>(CopyCredentials);
+            GetRandomUserCommand = new RelayCommand(GetRandomUser);
         }
         
         #endregion
@@ -1112,6 +1171,246 @@ namespace EnvironmentBuilderApp.ViewModels
                     MessageBox.Show($"Failed to save configuration: {ex.Message}", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+        
+        // ══════════════════════════════════════════════════════════════════════
+        // NEW ENHANCED FEATURE COMMANDS
+        // ══════════════════════════════════════════════════════════════════════
+        
+        private async Task RunScenarioAsync(string? scenarioId)
+        {
+            if (string.IsNullOrEmpty(scenarioId)) return;
+            
+            var scenario = _scenarioService.GetScenarioById(scenarioId);
+            if (scenario == null)
+            {
+                StatusMessage = $"Scenario not found: {scenarioId}";
+                return;
+            }
+            
+            if (scenario.IsDangerous)
+            {
+                var result = MessageBox.Show(
+                    $"⚠️ WARNING\n\n{scenario.WarningMessage}\n\nThis will create {scenario.UserCount} users with potentially malicious data.\n\nContinue?",
+                    "Dangerous Scenario",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+                    
+                if (result != MessageBoxResult.Yes) return;
+            }
+            
+            IsProcessing = true;
+            StatusMessage = $"Running scenario: {scenario.Name}...";
+            AddLog($"🎯 Starting scenario: {scenario.Name}");
+            AddLog($"   {scenario.Description}");
+            
+            _auditLog.Log(Services.AuditAction.BuildStart, $"Scenario: {scenario.Name}");
+            _perfTracker.StartSession();
+            
+            try
+            {
+                var users = _scenarioService.GenerateScenarioUsers(scenario, UserPrefix);
+                UsersCreated = 0;
+                
+                foreach (var user in users)
+                {
+                    using var timer = _perfTracker.StartOperation("CreateUser");
+                    await Task.Delay(10);
+                    UsersCreated++;
+                    UsersProgress = (double)UsersCreated / users.Count * 100;
+                    OverallProgress = UsersProgress;
+                    
+                    if (UsersCreated % 50 == 0)
+                    {
+                        AddLog($"   Created {UsersCreated}/{users.Count} users");
+                    }
+                }
+                
+                _perfTracker.StopSession();
+                var summary = _perfTracker.GetSummary();
+                
+                AddLog($"✅ Scenario complete: {users.Count} users created");
+                AddLog($"   Avg response: {summary.AverageResponseTime:F2}ms, P95: {summary.P95ResponseTime:F2}ms");
+                StatusMessage = $"Scenario complete: {users.Count} users";
+                
+                _auditLog.Log(Services.AuditAction.BuildComplete, $"Scenario completed: {users.Count} users");
+            }
+            finally
+            {
+                IsProcessing = false;
+            }
+        }
+        
+        private void BrowseImportFile()
+        {
+            var dialog = new OpenFileDialog
+            {
+                Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*",
+                Title = "Select CSV File to Import"
+            };
+            
+            if (dialog.ShowDialog() == true)
+            {
+                ImportFilePath = dialog.FileName;
+                AddLog($"📂 Selected import file: {dialog.FileName}");
+            }
+        }
+        
+        private async Task ValidateCsvAsync()
+        {
+            if (string.IsNullOrEmpty(ImportFilePath)) return;
+            
+            StatusMessage = "Validating CSV file...";
+            
+            await Task.Run(() =>
+            {
+                var result = _csvService.ValidateCsvFile(ImportFilePath);
+                
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (result.IsValid)
+                    {
+                        AddLog($"✅ CSV Valid: {result.RecordCount} records found");
+                        AddLog($"   Columns: {string.Join(", ", result.Headers)}");
+                        StatusMessage = $"CSV valid: {result.RecordCount} records";
+                    }
+                    else
+                    {
+                        AddLog($"❌ CSV Invalid: {string.Join(", ", result.Errors)}");
+                        StatusMessage = "CSV validation failed";
+                    }
+                });
+            });
+        }
+        
+        private async Task ImportUsersAsync()
+        {
+            if (string.IsNullOrEmpty(ImportFilePath)) return;
+            
+            IsProcessing = true;
+            StatusMessage = "Importing users from CSV...";
+            
+            try
+            {
+                var users = await Task.Run(() => _csvService.ImportUsers(ImportFilePath));
+                AddLog($"✅ Imported {users.Count} users from CSV");
+                StatusMessage = $"Imported {users.Count} users";
+                _auditLog.Log(Services.AuditAction.ImportCsv, $"Imported {users.Count} users from {ImportFilePath}");
+            }
+            catch (Exception ex)
+            {
+                AddLog($"❌ Import failed: {ex.Message}");
+                StatusMessage = $"Import failed: {ex.Message}";
+            }
+            finally
+            {
+                IsProcessing = false;
+            }
+        }
+        
+        private void DownloadTemplate()
+        {
+            var dialog = new SaveFileDialog
+            {
+                FileName = "user_import_template.csv",
+                Filter = "CSV Files (*.csv)|*.csv",
+                Title = "Save Import Template"
+            };
+            
+            if (dialog.ShowDialog() == true)
+            {
+                _csvService.GenerateSampleTemplate(dialog.FileName);
+                AddLog($"📄 Template saved: {dialog.FileName}");
+                StatusMessage = "Template saved";
+            }
+        }
+        
+        private async Task ExportUsersAsync()
+        {
+            var dialog = new SaveFileDialog
+            {
+                FileName = $"users_{DateTime.Now:yyyyMMdd}.csv",
+                Filter = "CSV Files (*.csv)|*.csv",
+                Title = "Export Users"
+            };
+            
+            if (dialog.ShowDialog() == true)
+            {
+                IsProcessing = true;
+                StatusMessage = "Exporting users...";
+                
+                try
+                {
+                    var users = _dataGenerator.GenerateLoadTestUsers(UserPrefix, ExportUserCount);
+                    
+                    var format = SelectedExportFormat switch
+                    {
+                        "Selenium" => Services.CsvExportFormat.Selenium,
+                        "JMeter" => Services.CsvExportFormat.JMeter,
+                        "Postman" => Services.CsvExportFormat.Postman,
+                        "LoadRunner" => Services.CsvExportFormat.LoadRunner,
+                        "Credentials Only" => Services.CsvExportFormat.Credentials,
+                        _ => Services.CsvExportFormat.Standard
+                    };
+                    
+                    await Task.Run(() => _csvService.ExportUsers(users, dialog.FileName, format));
+                    
+                    AddLog($"✅ Exported {users.Count} users to {dialog.FileName}");
+                    StatusMessage = $"Exported {users.Count} users";
+                    _auditLog.Log(Services.AuditAction.ExportCsv, $"Exported {users.Count} users");
+                }
+                finally
+                {
+                    IsProcessing = false;
+                }
+            }
+        }
+        
+        private async Task ExportAllFormatsAsync()
+        {
+            // Use WPF-compatible folder selection
+            var exportPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), 
+                                          "EnvironmentBuilder", "Exports", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            
+            IsProcessing = true;
+            StatusMessage = "Exporting all formats...";
+            
+            try
+            {
+                var users = _dataGenerator.GenerateLoadTestUsers(UserPrefix, ExportUserCount);
+                await Task.Run(() => _csvService.ExportAllFormats(users, exportPath));
+                
+                AddLog($"✅ Exported {users.Count} users in all formats to {exportPath}");
+                StatusMessage = "Exported all formats";
+                
+                // Open the folder
+                System.Diagnostics.Process.Start("explorer.exe", exportPath);
+            }
+            finally
+            {
+                IsProcessing = false;
+            }
+        }
+        
+        private void CopyCredentials(string? username)
+        {
+            if (string.IsNullOrEmpty(username)) return;
+            
+            var credentials = $"{username}:{DefaultPassword}";
+            Clipboard.SetText(credentials);
+            StatusMessage = $"Copied credentials for {username}";
+            AddLog($"📋 Copied credentials for {username}");
+        }
+        
+        private void GetRandomUser()
+        {
+            var random = new Random();
+            var randomNum = random.Next(StartNumber, EndNumber + 1);
+            var username = $"{UserPrefix}{randomNum}";
+            
+            Clipboard.SetText(username);
+            StatusMessage = $"Random user: {username} (copied)";
+            AddLog($"🎲 Random user: {username}");
         }
         
         #endregion

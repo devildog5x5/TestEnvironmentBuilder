@@ -883,6 +883,155 @@ Test Brutally - Build Your Level of Complexity
                 </ScrollViewer>
             </TabItem>
             
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 7: TEST SCENARIOS -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="🎯  SCENARIOS">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="24,20">
+                        <TextBlock Text="PREDEFINED TEST SCENARIOS" Style="{StaticResource SectionHeader}"/>
+                        <TextBlock Text="Select a scenario to quickly set up a complete test environment optimized for specific testing goals." 
+                                   Foreground="{StaticResource TextMutedBrush}" FontSize="13" Margin="0,0,0,20"/>
+                        
+                        <!-- Scenario Cards Grid -->
+                        <UniformGrid Columns="3" Margin="0,0,0,20">
+                            <!-- Load Test -->
+                            <Border Style="{StaticResource Card}" Margin="0,0,12,12">
+                                <StackPanel>
+                                    <TextBlock Text="🏋️ Load Test" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentGoldBrush}"/>
+                                    <TextBlock Text="10,000 users for performance testing" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Est. 30 min" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,4,0,12"/>
+                                    <Button Content="Run Scenario" Command="{Binding RunScenarioCommand}" CommandParameter="load-test" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Security Audit -->
+                            <Border Style="{StaticResource Card}" Margin="6,0,6,12">
+                                <StackPanel>
+                                    <TextBlock Text="🔐 Security Audit" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentGoldBrush}"/>
+                                    <TextBlock Text="Users with various permission levels for ACL testing" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Est. 15 min" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,4,0,12"/>
+                                    <Button Content="Run Scenario" Command="{Binding RunScenarioCommand}" CommandParameter="security-audit" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Password Policy -->
+                            <Border Style="{StaticResource Card}" Margin="12,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="🔑 Password Policy" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentGoldBrush}"/>
+                                    <TextBlock Text="Test password expiration, lockout, and complexity" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Est. 10 min" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,4,0,12"/>
+                                    <Button Content="Run Scenario" Command="{Binding RunScenarioCommand}" CommandParameter="password-policy" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Edge Cases -->
+                            <Border Style="{StaticResource Card}" Margin="0,0,12,12">
+                                <StackPanel>
+                                    <TextBlock Text="🔬 Edge Cases" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentBlueBrush}"/>
+                                    <TextBlock Text="Unicode, max-length, special characters" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Est. 5 min" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,4,0,12"/>
+                                    <Button Content="Run Scenario" Command="{Binding RunScenarioCommand}" CommandParameter="edge-cases" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Chaos Test -->
+                            <Border Style="{StaticResource Card}" Margin="6,0,6,12" BorderBrush="{StaticResource AccentRedBrush}">
+                                <StackPanel>
+                                    <TextBlock Text="😈 Chaos / Negative" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentRedBrush}"/>
+                                    <TextBlock Text="SQL injection, XSS, malicious data" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="⚠️ Security Testing" Foreground="{StaticResource AccentRedBrush}" FontSize="11" Margin="0,4,0,12"/>
+                                    <Button Content="Run Scenario" Command="{Binding RunScenarioCommand}" CommandParameter="chaos-test" Style="{StaticResource DangerButton}"/>
+                                </StackPanel>
+                            </Border>
+                            
+                            <!-- Internationalization -->
+                            <Border Style="{StaticResource Card}" Margin="12,0,0,12">
+                                <StackPanel>
+                                    <TextBlock Text="🌍 International" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentBlueBrush}"/>
+                                    <TextBlock Text="Unicode names, international characters" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Est. 5 min" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,4,0,12"/>
+                                    <Button Content="Run Scenario" Command="{Binding RunScenarioCommand}" CommandParameter="unicode-test" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 8: IMPORT / EXPORT -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📥  IMPORT/EXPORT">
+                <Grid Margin="24,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Import Section -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                        <StackPanel>
+                            <TextBlock Text="📥 IMPORT USERS" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
+                            <TextBlock Text="Import users from CSV file. Supports automatic column detection." Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,0,0,16" TextWrapping="Wrap"/>
+                            
+                            <StackPanel Margin="0,0,0,16">
+                                <TextBlock Text="CSV File Path" Style="{StaticResource FieldLabel}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Text="{Binding ImportFilePath}" Style="{StaticResource InputBox}"/>
+                                    <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseImportFileCommand}" 
+                                            Style="{StaticResource SecondaryButton}" Margin="8,0,0,0"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <Button Content="Validate CSV" Command="{Binding ValidateCsvCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
+                                <Button Content="Import Users" Command="{Binding ImportUsersCommand}" Style="{StaticResource PrimaryButton}"/>
+                            </StackPanel>
+                            
+                            <Button Content="Download Template" Command="{Binding DownloadTemplateCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Border>
+                    
+                    <!-- Export Section -->
+                    <Border Grid.Column="1" Style="{StaticResource Card}" Margin="12,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="📤 EXPORT USERS" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
+                            <TextBlock Text="Export generated users in various formats for testing tools." Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,0,0,16" TextWrapping="Wrap"/>
+                            
+                            <StackPanel Margin="0,0,0,16">
+                                <TextBlock Text="Export Format" Style="{StaticResource FieldLabel}"/>
+                                <ComboBox SelectedItem="{Binding SelectedExportFormat}">
+                                    <ComboBoxItem Content="Standard CSV"/>
+                                    <ComboBoxItem Content="Selenium"/>
+                                    <ComboBoxItem Content="JMeter"/>
+                                    <ComboBoxItem Content="Postman"/>
+                                    <ComboBoxItem Content="LoadRunner"/>
+                                    <ComboBoxItem Content="Credentials Only"/>
+                                </ComboBox>
+                            </StackPanel>
+                            
+                            <StackPanel Margin="0,0,0,16">
+                                <TextBlock Text="Number of Users" Style="{StaticResource FieldLabel}"/>
+                                <TextBox Text="{Binding ExportUserCount}" Style="{StaticResource InputBox}" Width="100" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            
+                            <Button Content="Export to CSV" Command="{Binding ExportUsersCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left"/>
+                            
+                            <TextBlock Text="Export All Formats" Foreground="{StaticResource AccentBlueBrush}" FontSize="12" Margin="0,16,0,0" Cursor="Hand">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick" Command="{Binding ExportAllFormatsCommand}"/>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
+            
         </TabControl>
         
         <!-- Footer Status Bar -->
