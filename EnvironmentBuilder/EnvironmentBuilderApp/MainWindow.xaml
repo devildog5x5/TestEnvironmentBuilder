@@ -1,8 +1,9 @@
 ﻿<!--
 ============================================================================
-MainWindow.xaml - Main Application Window
-Environment Builder - Modern test environment creation tool
+MainWindow.xaml - Unified Environment Builder Application
+All functionality in one tabbed interface
 Evolved from TreeBuilder 3.4 by Robert Foster
+Test Brutally - Build Your Level of Complexity
 ============================================================================
 -->
 <Window x:Class="EnvironmentBuilderApp.MainWindow"
@@ -13,49 +14,32 @@ Evolved from TreeBuilder 3.4 by Robert Foster
         xmlns:vm="clr-namespace:EnvironmentBuilderApp.ViewModels"
         xmlns:local="clr-namespace:EnvironmentBuilderApp"
         mc:Ignorable="d"
-        Title="Environment Builder" 
-        Height="750" Width="1100"
+        Title="Environment Builder - Test Brutally" 
+        Height="900" Width="1400"
         WindowStartupLocation="CenterScreen"
-        Background="#1a1a2e">
+        Background="#0d1117">
     
     <!-- Window Icon as DrawingImage - Iconic Spartan Helmet -->
     <Window.Icon>
         <DrawingImage>
             <DrawingImage.Drawing>
                 <DrawingGroup>
-                    <!-- Background -->
                     <GeometryDrawing Brush="#0a0808">
                         <GeometryDrawing.Geometry>
                             <EllipseGeometry Center="64,64" RadiusX="60" RadiusY="60"/>
                         </GeometryDrawing.Geometry>
                     </GeometryDrawing>
-                    <!-- Main helmet - iconic Spartan shape -->
                     <GeometryDrawing Brush="#b8963c" Geometry="M64,12 C88,12 102,28 102,55 L102,80 L102,100 L94,118 L82,115 L78,98 L64,108 L50,98 L46,115 L34,118 L26,100 L26,80 L26,55 C26,28 40,12 64,12 Z">
                         <GeometryDrawing.Pen>
                             <Pen Brush="#8a6b20" Thickness="2"/>
                         </GeometryDrawing.Pen>
                     </GeometryDrawing>
-                    <!-- T-Visor eye slit -->
                     <GeometryDrawing Brush="#0a0808" Geometry="M34,56 L94,56 L96,68 L32,68 Z"/>
-                    <!-- Face opening -->
                     <GeometryDrawing Brush="#0a0808" Geometry="M48,68 L80,68 L76,95 L64,105 L52,95 Z"/>
-                    <!-- Nose guard -->
                     <GeometryDrawing Brush="#c9a850" Geometry="M58,56 L70,56 L68,82 L64,88 L60,82 Z"/>
-                    <!-- Tree root node -->
                     <GeometryDrawing Brush="#ff8c00">
                         <GeometryDrawing.Geometry>
                             <EllipseGeometry Center="64,32" RadiusX="5" RadiusY="5"/>
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                    <!-- Tree level 1 nodes -->
-                    <GeometryDrawing Brush="#ff8c00">
-                        <GeometryDrawing.Geometry>
-                            <EllipseGeometry Center="50,50" RadiusX="4" RadiusY="4"/>
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="#ff8c00">
-                        <GeometryDrawing.Geometry>
-                            <EllipseGeometry Center="78,50" RadiusX="4" RadiusY="4"/>
                         </GeometryDrawing.Geometry>
                     </GeometryDrawing>
                 </DrawingGroup>
@@ -63,41 +47,47 @@ Evolved from TreeBuilder 3.4 by Robert Foster
         </DrawingImage>
     </Window.Icon>
     
-    <!-- Set DataContext to ViewModel -->
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
     
     <Window.Resources>
-        <!-- Color Palette - Spartan Warrior Theme -->
-        <Color x:Key="PrimaryDark">#1a1a2e</Color>
-        <Color x:Key="SecondaryDark">#16213e</Color>
-        <Color x:Key="AccentGold">#d4a853</Color>
-        <Color x:Key="AccentBronze">#b8860b</Color>
-        <Color x:Key="TextLight">#e8e8e8</Color>
-        <Color x:Key="TextMuted">#888888</Color>
+        <!-- Color Palette - Dark Warrior Theme -->
+        <Color x:Key="BgDark">#0d1117</Color>
+        <Color x:Key="BgCard">#161b22</Color>
+        <Color x:Key="BgInput">#21262d</Color>
+        <Color x:Key="BorderColor">#30363d</Color>
+        <Color x:Key="AccentGold">#f0a500</Color>
+        <Color x:Key="AccentRed">#f85149</Color>
+        <Color x:Key="AccentGreen">#3fb950</Color>
+        <Color x:Key="AccentBlue">#58a6ff</Color>
+        <Color x:Key="TextPrimary">#c9d1d9</Color>
+        <Color x:Key="TextMuted">#8b949e</Color>
         
-        <SolidColorBrush x:Key="PrimaryDarkBrush" Color="{StaticResource PrimaryDark}"/>
-        <SolidColorBrush x:Key="SecondaryDarkBrush" Color="{StaticResource SecondaryDark}"/>
+        <SolidColorBrush x:Key="BgDarkBrush" Color="{StaticResource BgDark}"/>
+        <SolidColorBrush x:Key="BgCardBrush" Color="{StaticResource BgCard}"/>
+        <SolidColorBrush x:Key="BgInputBrush" Color="{StaticResource BgInput}"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
-        <SolidColorBrush x:Key="AccentBronzeBrush" Color="{StaticResource AccentBronze}"/>
-        <SolidColorBrush x:Key="TextLightBrush" Color="{StaticResource TextLight}"/>
+        <SolidColorBrush x:Key="AccentRedBrush" Color="{StaticResource AccentRed}"/>
+        <SolidColorBrush x:Key="AccentGreenBrush" Color="{StaticResource AccentGreen}"/>
+        <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource AccentBlue}"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimary}"/>
         <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMuted}"/>
         
-        <!-- Button Style -->
-        <Style x:Key="GoldButton" TargetType="Button">
+        <!-- Primary Button Style -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource AccentGoldBrush}"/>
-            <Setter Property="Foreground" Value="#1a1a2e"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Foreground" Value="#0d1117"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="20,10"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="4" 
-                                Padding="{TemplateBinding Padding}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -105,43 +95,123 @@ Evolved from TreeBuilder 3.4 by Robert Foster
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource AccentBronzeBrush}"/>
+                    <Setter Property="Background" Value="#d48f00"/>
                 </Trigger>
                 <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="#555555"/>
-                    <Setter Property="Foreground" Value="#888888"/>
+                    <Setter Property="Background" Value="#484f58"/>
+                    <Setter Property="Foreground" Value="#6e7681"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
         
-        <!-- TextBox Style -->
-        <Style x:Key="DarkTextBox" TargetType="TextBox">
-            <Setter Property="Background" Value="#252545"/>
-            <Setter Property="Foreground" Value="{StaticResource TextLightBrush}"/>
-            <Setter Property="BorderBrush" Value="#3a3a5e"/>
+        <!-- Secondary Button Style -->
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource BgInputBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="16,10"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#30363d"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Danger Button Style -->
+        <Style x:Key="DangerButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#da3633"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!-- Text Input Style -->
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource BgInputBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="CaretBrush" Value="{StaticResource AccentGoldBrush}"/>
         </Style>
         
-        <!-- Label Style -->
-        <Style x:Key="GoldLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource AccentGoldBrush}"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
+        <!-- ComboBox Style -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="{StaticResource BgInputBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="13"/>
         </Style>
         
-        <!-- TabItem Style -->
+        <!-- Label Style -->
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+        
+        <!-- Section Header Style -->
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,16"/>
+        </Style>
+        
+        <!-- Card Style -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource BgCardBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+        </Style>
+        
+        <!-- Tab Style -->
         <Style TargetType="TabItem">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}"/>
-            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="20,14"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
                         <Border x:Name="Border" Background="{TemplateBinding Background}" 
-                                BorderThickness="0,0,0,2" BorderBrush="Transparent"
-                                Padding="{TemplateBinding Padding}">
+                                BorderThickness="0,0,0,3" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
                             <ContentPresenter ContentSource="Header"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -150,7 +220,31 @@ Evolved from TreeBuilder 3.4 by Robert Foster
                                 <Setter Property="Foreground" Value="{StaticResource AccentGoldBrush}"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="{StaticResource TextLightBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Preset Card Style -->
+        <Style x:Key="PresetCard" TargetType="RadioButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Border" Background="{StaticResource BgCardBrush}" 
+                                BorderBrush="{StaticResource BorderBrush}" BorderThickness="2" 
+                                CornerRadius="8" Padding="16" Cursor="Hand" Margin="0,0,12,0">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource AccentGoldBrush}"/>
+                                <Setter TargetName="Border" Property="Background" Value="#1a1f26"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#1a1f26"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -164,356 +258,650 @@ Evolved from TreeBuilder 3.4 by Robert Foster
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <!-- Header -->
-        <Border Grid.Row="0" Background="#16213e" Padding="20,15">
-            <Grid>
+        <Border Grid.Row="0" Background="#161b22" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+            <Grid Margin="24,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
+                <!-- Logo and Title -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <!-- Iconic Spartan Helmet - Clean Silhouette -->
-                    <Viewbox Width="50" Height="55" Margin="0,0,12,0">
+                    <Viewbox Width="44" Height="48" Margin="0,0,14,0">
                         <Canvas Width="100" Height="120">
-                            <!-- Background circle -->
                             <Ellipse Canvas.Left="5" Canvas.Top="5" Width="90" Height="110" Fill="#0a0808"/>
-                            
-                            <!-- Main helmet shape - solid dark bronze -->
-                            <Path Data="M50,8 
-                                        C75,8 88,25 88,50 
-                                        L88,75 
-                                        L88,95 L80,115 L68,112 L65,95 
-                                        L50,105 
-                                        L35,95 L32,112 L20,115 L12,95 
-                                        L12,75 
-                                        L12,50 
-                                        C12,25 25,8 50,8 Z" 
+                            <Path Data="M50,8 C75,8 88,25 88,50 L88,75 L88,95 L80,115 L68,112 L65,95 L50,105 L35,95 L32,112 L20,115 L12,95 L12,75 L12,50 C12,25 25,8 50,8 Z" 
                                   Fill="#b8963c" Stroke="#8a6b20" StrokeThickness="2"/>
-                            
-                            <!-- Helmet dome highlight -->
-                            <Path Data="M28,20 C38,12 62,12 72,20" 
-                                  Stroke="#d4b860" StrokeThickness="2" Fill="Transparent"/>
-                            <Path Data="M20,35 C20,28 30,22 42,22" 
-                                  Stroke="#c9a850" StrokeThickness="1.5" Fill="Transparent"/>
-                            
-                            <!-- T-Visor - eye slit -->
                             <Path Data="M22,52 L78,52 L80,62 L20,62 Z" Fill="#0a0808"/>
-                            
-                            <!-- Nose/face opening - angular -->
                             <Path Data="M38,62 L62,62 L58,90 L50,100 L42,90 Z" Fill="#0a0808"/>
-                            
-                            <!-- Nose guard - center strip -->
                             <Path Data="M45,52 L55,52 L53,78 L50,85 L47,78 Z" Fill="#c9a850" Stroke="#8a6b20" StrokeThickness="1"/>
-                            
-                            <!-- Left eye shadow -->
-                            <Path Data="M24,54 L44,54 L44,60 L22,60 Z" Fill="#050404"/>
-                            <!-- Right eye shadow -->
-                            <Path Data="M56,54 L76,54 L78,60 L56,60 Z" Fill="#050404"/>
-                            
-                            <!-- Left cheek guard edge highlight -->
-                            <Path Data="M12,55 L12,90 L20,110" Stroke="#d4b860" StrokeThickness="1" Fill="Transparent"/>
-                            <!-- Right cheek guard edge highlight -->
-                            <Path Data="M88,55 L88,90 L80,110" Stroke="#d4b860" StrokeThickness="1" Fill="Transparent"/>
-                            
-                            <!-- Tree nodes - glowing thought process in forehead -->
                             <Ellipse Canvas.Left="45" Canvas.Top="22" Width="10" Height="10" Fill="#ff8c00"/>
                             <Line X1="50" Y1="32" X2="50" Y2="42" Stroke="#ff8c00" StrokeThickness="2.5"/>
                             <Line X1="50" Y1="42" X2="38" Y2="50" Stroke="#ff8c00" StrokeThickness="2"/>
                             <Line X1="50" Y1="42" X2="62" Y2="50" Stroke="#ff8c00" StrokeThickness="2"/>
                             <Ellipse Canvas.Left="33" Canvas.Top="46" Width="8" Height="8" Fill="#ff8c00"/>
                             <Ellipse Canvas.Left="59" Canvas.Top="46" Width="8" Height="8" Fill="#ff8c00"/>
-                            
-                            <!-- Bright node centers -->
                             <Ellipse Canvas.Left="47" Canvas.Top="24" Width="6" Height="6" Fill="#ffffaa"/>
-                            <Ellipse Canvas.Left="35" Canvas.Top="48" Width="4" Height="4" Fill="#ffffaa"/>
-                            <Ellipse Canvas.Left="61" Canvas.Top="48" Width="4" Height="4" Fill="#ffffaa"/>
                         </Canvas>
                     </Viewbox>
-                    
-                    <StackPanel>
-                        <TextBlock Text="ENVIRONMENT BUILDER" 
-                                   FontSize="20" FontWeight="Bold" 
-                                   Foreground="{StaticResource AccentGoldBrush}"/>
-                        <TextBlock Text="Test Brutally - Build Your Level of Complexity" 
-                                   FontSize="11" Foreground="{StaticResource TextMutedBrush}"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="ENVIRONMENT BUILDER" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentGoldBrush}"/>
+                        <TextBlock Text="Test Brutally - Build Your Level of Complexity" FontSize="12" Foreground="{StaticResource TextMutedBrush}"/>
                     </StackPanel>
                 </StackPanel>
                 
-                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Ellipse Width="12" Height="12" Margin="0,0,8,0">
-                        <Ellipse.Style>
-                            <Style TargetType="Ellipse">
-                                <Setter Property="Fill" Value="#666666"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsConnected}" Value="True">
-                                        <Setter Property="Fill" Value="#00ff88"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Ellipse.Style>
-                    </Ellipse>
-                    <TextBlock Text="{Binding IsConnected, Converter={x:Static local:BoolToConnectionConverter.Instance}, FallbackValue='Disconnected'}" 
-                               Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
-                </StackPanel>
+                <!-- Connection Status -->
+                <Border Grid.Column="2" Background="{StaticResource BgInputBrush}" CornerRadius="20" Padding="16,8">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="10" Height="10" Margin="0,0,10,0">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="#f85149"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                            <Setter Property="Fill" Value="#3fb950"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <TextBlock Text="{Binding ConnectionStatus}" Foreground="{StaticResource TextMutedBrush}" FontSize="13"/>
+                    </StackPanel>
+                </Border>
             </Grid>
         </Border>
         
-        <!-- Main Content with Tabs -->
-        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0"
-                    SelectedIndex="{Binding SelectedTabIndex}">
+        <!-- Main Content - Tabbed Interface -->
+        <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Margin="0" Padding="0">
             
-            <!-- ICE Settings Tab -->
-            <TabItem Header="🔌 Connection">
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 1: BUILD ENVIRONMENT -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="⚔️  BUILD">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="24,20">
+                        
+                        <!-- Complexity Presets -->
+                        <TextBlock Text="SELECT COMPLEXITY LEVEL" Style="{StaticResource SectionHeader}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                            <RadioButton Style="{StaticResource PresetCard}" GroupName="Preset" 
+                                         IsChecked="{Binding IsSimplePreset}" Command="{Binding SelectPresetCommand}" CommandParameter="Simple">
+                                <StackPanel Width="140">
+                                    <TextBlock Text="🌱 SIMPLE" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentGreenBrush}"/>
+                                    <TextBlock Text="10 Users" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                    <TextBlock Text="2 Containers" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                                    <TextBlock Text="~30 seconds" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource PresetCard}" GroupName="Preset" 
+                                         IsChecked="{Binding IsMediumPreset}" Command="{Binding SelectPresetCommand}" CommandParameter="Medium">
+                                <StackPanel Width="140">
+                                    <TextBlock Text="⚡ MEDIUM" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentBlueBrush}"/>
+                                    <TextBlock Text="100 Users" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                    <TextBlock Text="5 Containers" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                                    <TextBlock Text="~2 minutes" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource PresetCard}" GroupName="Preset" 
+                                         IsChecked="{Binding IsComplexPreset}" Command="{Binding SelectPresetCommand}" CommandParameter="Complex">
+                                <StackPanel Width="140">
+                                    <TextBlock Text="🔥 COMPLEX" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentGoldBrush}"/>
+                                    <TextBlock Text="500 Users" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                    <TextBlock Text="10 Containers" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                                    <TextBlock Text="~10 minutes" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource PresetCard}" GroupName="Preset" 
+                                         IsChecked="{Binding IsBrutalPreset}" Command="{Binding SelectPresetCommand}" CommandParameter="Brutal">
+                                <StackPanel Width="140">
+                                    <TextBlock Text="💀 BRUTAL" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentRedBrush}"/>
+                                    <TextBlock Text="2000+ Users" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                    <TextBlock Text="25 Containers" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                                    <TextBlock Text="~30+ minutes" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource PresetCard}" GroupName="Preset" 
+                                         IsChecked="{Binding IsCustomPreset}" Command="{Binding SelectPresetCommand}" CommandParameter="Custom">
+                                <StackPanel Width="140">
+                                    <TextBlock Text="⚙️ CUSTOM" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Define your own" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                    <TextBlock Text="complexity level" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                                    <TextBlock Text="Variable time" Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,8,0,0"/>
+                                </StackPanel>
+                            </RadioButton>
+                        </StackPanel>
+                        
+                        <!-- Connection Settings Card -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.ColumnSpan="3" Text="CONNECTION SETTINGS" Style="{StaticResource SectionHeader}"/>
+                                
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,12,12">
+                                    <TextBlock Text="LDAP Server" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding ServerAddress, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="6,0,6,12">
+                                    <TextBlock Text="Port" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="2" Margin="12,0,0,12">
+                                    <TextBlock Text="Base DN" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding BaseDN, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                
+                                <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,12,0">
+                                    <TextBlock Text="Bind DN (Username)" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding BindDN, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="1" Margin="6,0,6,0">
+                                    <TextBlock Text="Password" Style="{StaticResource FieldLabel}"/>
+                                    <PasswordBox x:Name="PasswordBox" Background="#21262d" Foreground="#c9d1d9" 
+                                                 BorderBrush="#30363d" BorderThickness="1" Padding="10,8" FontSize="13"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Bottom">
+                                    <Button Content="Test Connection" Command="{Binding TestConnectionCommand}" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- User Generation Card -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                
+                                <TextBlock Grid.ColumnSpan="4" Text="USER GENERATION" Style="{StaticResource SectionHeader}"/>
+                                
+                                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,12,12">
+                                    <TextBlock Text="Username Prefix" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding UserPrefix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="1" Margin="6,0,6,12">
+                                    <TextBlock Text="Start Number" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding StartNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="2" Margin="6,0,6,12">
+                                    <TextBlock Text="End Number" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding EndNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.Column="3" Margin="12,0,0,12">
+                                    <TextBlock Text="Default Password" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding DefaultPassword, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                
+                                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,12,0">
+                                    <TextBlock Text="User Container DN" Style="{StaticResource FieldLabel}"/>
+                                    <TextBox Text="{Binding UserContainerDN, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputBox}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Margin="12,0,0,0" Orientation="Horizontal" VerticalAlignment="Bottom">
+                                    <CheckBox Content="Generate Random Data" IsChecked="{Binding GenerateRandomData}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                    <CheckBox Content="Create Home Directories" IsChecked="{Binding CreateHomeDirectories}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- Action Buttons -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                            <Button Content="⚔️  BUILD ENVIRONMENT" Command="{Binding BuildEnvironmentCommand}" 
+                                    Style="{StaticResource PrimaryButton}" FontSize="15" Padding="32,14" Margin="0,0,16,0"/>
+                            <Button Content="Generate LDIF Only" Command="{Binding GenerateLdifCommand}" 
+                                    Style="{StaticResource SecondaryButton}"/>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 2: LIVE DASHBOARD -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📊  DASHBOARD">
+                <Grid Margin="24,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Stats Cards Row -->
+                    <UniformGrid Grid.Row="0" Rows="1" Columns="4" Margin="0,0,0,20">
+                        <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                            <StackPanel>
+                                <TextBlock Text="USERS CREATED" Foreground="{StaticResource TextMutedBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding UsersCreated}" Foreground="{StaticResource AccentGreenBrush}" FontSize="32" FontWeight="Bold" Margin="0,4,0,0"/>
+                                <TextBlock Text="{Binding UsersPerSecond, StringFormat={}{0:F1}/sec}" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="6,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="CONTAINERS" Foreground="{StaticResource TextMutedBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding ContainersCreated}" Foreground="{StaticResource AccentBlueBrush}" FontSize="32" FontWeight="Bold" Margin="0,4,0,0"/>
+                                <TextBlock Text="Active structures" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="6,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="ERRORS" Foreground="{StaticResource TextMutedBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding ErrorCount}" Foreground="{StaticResource AccentRedBrush}" FontSize="32" FontWeight="Bold" Margin="0,4,0,0"/>
+                                <TextBlock Text="Failed operations" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}" Margin="12,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="ELAPSED TIME" Foreground="{StaticResource TextMutedBrush}" FontSize="11" FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding ElapsedTime}" Foreground="{StaticResource AccentGoldBrush}" FontSize="32" FontWeight="Bold" Margin="0,4,0,0"/>
+                                <TextBlock Text="{Binding EstimatedRemaining, StringFormat=~{0} remaining}" Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                    
+                    <!-- Live Log and Progress -->
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Live Operation Log -->
+                        <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="LIVE OPERATIONS" Style="{StaticResource SectionHeader}"/>
+                                <ListBox Grid.Row="1" ItemsSource="{Binding LiveLog}" 
+                                         Background="Transparent" BorderThickness="0" 
+                                         Foreground="{StaticResource TextPrimaryBrush}"
+                                         FontFamily="Cascadia Code, Consolas" FontSize="12"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- Progress Panel -->
+                        <Border Grid.Column="1" Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock Text="PROGRESS" Style="{StaticResource SectionHeader}"/>
+                                
+                                <!-- Overall Progress -->
+                                <TextBlock Text="Overall" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,0,0,6"/>
+                                <Grid Margin="0,0,0,4">
+                                    <ProgressBar Value="{Binding OverallProgress}" Maximum="100" Height="24" 
+                                                 Background="#21262d" Foreground="{StaticResource AccentGoldBrush}" BorderThickness="0"/>
+                                    <TextBlock Text="{Binding OverallProgress, StringFormat={}{0:F0}%}" 
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Foreground="White" FontWeight="SemiBold" FontSize="12"/>
+                                </Grid>
+                                <TextBlock Text="{Binding CurrentOperation}" Foreground="{StaticResource TextMutedBrush}" 
+                                           FontSize="11" Margin="0,4,0,16" TextTrimming="CharacterEllipsis"/>
+                                
+                                <!-- Users Progress -->
+                                <TextBlock Text="Users" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,0,0,6"/>
+                                <ProgressBar Value="{Binding UsersProgress}" Maximum="100" Height="8" 
+                                             Background="#21262d" Foreground="{StaticResource AccentGreenBrush}" BorderThickness="0"/>
+                                <TextBlock Text="{Binding UsersProgressText}" Foreground="{StaticResource TextMutedBrush}" 
+                                           FontSize="11" Margin="0,4,0,16"/>
+                                
+                                <!-- Containers Progress -->
+                                <TextBlock Text="Containers" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,0,0,6"/>
+                                <ProgressBar Value="{Binding ContainersProgress}" Maximum="100" Height="8" 
+                                             Background="#21262d" Foreground="{StaticResource AccentBlueBrush}" BorderThickness="0"/>
+                                <TextBlock Text="{Binding ContainersProgressText}" Foreground="{StaticResource TextMutedBrush}" 
+                                           FontSize="11" Margin="0,4,0,16"/>
+                                
+                                <!-- Current Phase -->
+                                <Border Background="#21262d" CornerRadius="6" Padding="12" Margin="0,8,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="CURRENT PHASE" Foreground="{StaticResource TextMutedBrush}" FontSize="10" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding CurrentPhase}" Foreground="{StaticResource AccentGoldBrush}" FontSize="14" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 3: VALIDATE & HEALTH -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="✅  VALIDATE">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Margin="20">
-                        <TextBlock Text="LDAP Connection Settings" Style="{StaticResource GoldLabel}" FontSize="16" Margin="0,0,0,15"/>
+                    <StackPanel Margin="24,20">
+                        <TextBlock Text="ENVIRONMENT VALIDATION" Style="{StaticResource SectionHeader}"/>
+                        
+                        <!-- Validation Actions -->
+                        <UniformGrid Rows="1" Columns="4" Margin="0,0,0,24">
+                            <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <TextBlock Text="🔍 Validate Users" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Check all users exist and have correct attributes" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <Button Content="Run Validation" Command="{Binding ValidateUsersCommand}" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource Card}" Margin="6,0,6,0">
+                                <StackPanel>
+                                    <TextBlock Text="🔐 Test Authentication" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Verify users can authenticate with credentials" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <Button Content="Test Auth" Command="{Binding TestAuthenticationCommand}" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource Card}" Margin="6,0,6,0">
+                                <StackPanel>
+                                    <TextBlock Text="📂 Verify Directories" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Check home directories exist with proper permissions" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <Button Content="Check Directories" Command="{Binding VerifyDirectoriesCommand}" Style="{StaticResource SecondaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource Card}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="💓 Health Check" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Full system health check including LDAP response times" Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <Button Content="Run Health Check" Command="{Binding HealthCheckCommand}" Style="{StaticResource PrimaryButton}"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                        
+                        <!-- Validation Results -->
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*" MinHeight="300"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                    <TextBlock Text="VALIDATION RESULTS" Style="{StaticResource SectionHeader}" Margin="0"/>
+                                    <TextBlock Text="{Binding ValidationSummary}" Foreground="{StaticResource TextMutedBrush}" FontSize="14" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <ListBox Grid.Row="1" ItemsSource="{Binding ValidationResults}" 
+                                         Background="Transparent" BorderThickness="0" 
+                                         FontFamily="Cascadia Code, Consolas" FontSize="12">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,4">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Icon}" FontSize="14"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Message}" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 4: CLEANUP -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="🧹  CLEANUP">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="24,20">
+                        <TextBlock Text="ENVIRONMENT CLEANUP" Style="{StaticResource SectionHeader}"/>
+                        
+                        <!-- Warning Banner -->
+                        <Border Background="#2d1b1b" BorderBrush="{StaticResource AccentRedBrush}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,24">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚠️" FontSize="24" Margin="0,0,16,0"/>
+                                <StackPanel>
+                                    <TextBlock Text="DANGER ZONE" Foreground="{StaticResource AccentRedBrush}" FontSize="14" FontWeight="Bold"/>
+                                    <TextBlock Text="Cleanup operations permanently delete data. Make sure you have backups before proceeding." 
+                                               Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        
+                        <!-- Cleanup Options -->
+                        <UniformGrid Rows="1" Columns="3" Margin="0,0,0,24">
+                            <Border Style="{StaticResource Card}" Margin="0,0,12,0">
+                                <StackPanel>
+                                    <TextBlock Text="👤 Delete Users" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Remove all generated test users matching the configured prefix" 
+                                               Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="User Prefix to Delete" Style="{StaticResource FieldLabel}"/>
+                                        <TextBox Text="{Binding CleanupUserPrefix}" Style="{StaticResource InputBox}"/>
+                                    </StackPanel>
+                                    <Button Content="Delete Users" Command="{Binding DeleteUsersCommand}" Style="{StaticResource DangerButton}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource Card}" Margin="6,0,6,0">
+                                <StackPanel>
+                                    <TextBlock Text="📁 Delete Containers" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <TextBlock Text="Remove test container structures (must be empty first)" 
+                                               Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Container DN to Delete" Style="{StaticResource FieldLabel}"/>
+                                        <TextBox Text="{Binding CleanupContainerDN}" Style="{StaticResource InputBox}"/>
+                                    </StackPanel>
+                                    <Button Content="Delete Containers" Command="{Binding DeleteContainersCommand}" Style="{StaticResource DangerButton}"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource Card}" Margin="12,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="💣 Full Reset" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AccentRedBrush}"/>
+                                    <TextBlock Text="Complete teardown - removes ALL test data including users, containers, and home directories" 
+                                               Foreground="{StaticResource TextMutedBrush}" FontSize="12" Margin="0,8,0,12" TextWrapping="Wrap"/>
+                                    <CheckBox Content="I understand this is irreversible" IsChecked="{Binding ConfirmFullReset}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                                    <Button Content="⚠️ FULL RESET" Command="{Binding FullResetCommand}" Style="{StaticResource DangerButton}"
+                                            IsEnabled="{Binding ConfirmFullReset}"/>
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                        
+                        <!-- Cleanup Log -->
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="200"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="CLEANUP LOG" Style="{StaticResource SectionHeader}"/>
+                                <ListBox Grid.Row="1" ItemsSource="{Binding CleanupLog}" 
+                                         Background="Transparent" BorderThickness="0"
+                                         FontFamily="Cascadia Code, Consolas" FontSize="12"
+                                         Foreground="{StaticResource TextPrimaryBrush}"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 5: REPORTS -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="📈  REPORTS">
+                <Grid Margin="24,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Report List -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,12,0" Grid.RowSpan="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="SAVED REPORTS" Style="{StaticResource SectionHeader}"/>
+                            <ListBox Grid.Row="1" ItemsSource="{Binding SavedReports}" SelectedItem="{Binding SelectedReport}"
+                                     Background="Transparent" BorderThickness="0">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,4">
+                                            <TextBlock Text="{Binding Name}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Date}" Foreground="{StaticResource TextMutedBrush}" FontSize="11"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Grid.Row="2" Content="Generate New Report" Command="{Binding GenerateReportCommand}" 
+                                    Style="{StaticResource PrimaryButton}" Margin="0,12,0,0"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Report Content -->
+                    <Border Grid.Column="1" Style="{StaticResource Card}" Grid.RowSpan="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <TextBlock Text="{Binding SelectedReport.Name, FallbackValue='Select a report'}" 
+                                           Style="{StaticResource SectionHeader}" Margin="0"/>
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <TextBlock Text="{Binding ReportContent}" Foreground="{StaticResource TextPrimaryBrush}" 
+                                           FontFamily="Cascadia Code, Consolas" FontSize="12" TextWrapping="Wrap"/>
+                            </ScrollViewer>
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                                <Button Content="Export HTML" Command="{Binding ExportHtmlCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
+                                <Button Content="Export PDF" Command="{Binding ExportPdfCommand}" Style="{StaticResource SecondaryButton}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </TabItem>
+            
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <!-- TAB 6: SETTINGS -->
+            <!-- ═══════════════════════════════════════════════════════════════════ -->
+            <TabItem Header="⚙️  SETTINGS">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="24,20">
+                        <TextBlock Text="APPLICATION SETTINGS" Style="{StaticResource SectionHeader}"/>
                         
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
                             
-                            <!-- Server Address -->
-                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,15">
-                                <TextBlock Text="Server Address *" Style="{StaticResource GoldLabel}"/>
-                                <TextBox Text="{Binding Configuration.Connection.ServerAddress, UpdateSourceTrigger=PropertyChanged}" 
-                                         Style="{StaticResource DarkTextBox}"/>
-                            </StackPanel>
+                            <!-- Output Settings -->
+                            <Border Style="{StaticResource Card}" Margin="0,0,12,16">
+                                <StackPanel>
+                                    <TextBlock Text="OUTPUT PATHS" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="LDIF Export Directory" Style="{StaticResource FieldLabel}"/>
+                                        <TextBox Text="{Binding LdifExportPath}" Style="{StaticResource InputBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Log File Directory" Style="{StaticResource FieldLabel}"/>
+                                        <TextBox Text="{Binding LogFilePath}" Style="{StaticResource InputBox}"/>
+                                    </StackPanel>
+                                    <StackPanel Margin="0,0,0,12">
+                                        <TextBlock Text="Reports Directory" Style="{StaticResource FieldLabel}"/>
+                                        <TextBox Text="{Binding ReportsPath}" Style="{StaticResource InputBox}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
                             
-                            <!-- Port -->
-                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,0,0,15">
-                                <TextBlock Text="Port *" Style="{StaticResource GoldLabel}"/>
-                                <TextBox Text="{Binding Configuration.Connection.Port, UpdateSourceTrigger=PropertyChanged}" 
-                                         Style="{StaticResource DarkTextBox}"/>
-                            </StackPanel>
-                            
-                            <!-- Bind DN -->
-                            <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,10,15">
-                                <TextBlock Text="Bind DN (Username)" Style="{StaticResource GoldLabel}"/>
-                                <TextBox Text="{Binding Configuration.Connection.BindDN, UpdateSourceTrigger=PropertyChanged}" 
-                                         Style="{StaticResource DarkTextBox}"/>
-                            </StackPanel>
-                            
-                            <!-- Password -->
-                            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,0,0,15">
-                                <TextBlock Text="Password" Style="{StaticResource GoldLabel}"/>
-                                <PasswordBox x:Name="PasswordBox" 
-                                             Background="#252545" Foreground="White" 
-                                             BorderBrush="#3a3a5e" BorderThickness="1" Padding="8,5"/>
-                            </StackPanel>
-                            
-                            <!-- Base DN -->
-                            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,0,15">
-                                <TextBlock Text="Base DN" Style="{StaticResource GoldLabel}"/>
-                                <TextBox Text="{Binding Configuration.Connection.BaseDN, UpdateSourceTrigger=PropertyChanged}" 
-                                         Style="{StaticResource DarkTextBox}"/>
-                            </StackPanel>
-                            
-                            <!-- Options -->
-                            <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,0,0,15">
-                                <CheckBox Content="Use SSL/TLS" IsChecked="{Binding Configuration.Connection.UseSSL}"
-                                          Foreground="{StaticResource TextLightBrush}" Margin="0,0,20,0"/>
-                                <CheckBox Content="Anonymous Bind" IsChecked="{Binding Configuration.Connection.UseAnonymousBind}"
-                                          Foreground="{StaticResource TextLightBrush}" Margin="0,0,20,0"/>
-                                <CheckBox Content="Stop on Error" IsChecked="{Binding Configuration.Connection.StopOnError}"
-                                          Foreground="{StaticResource TextLightBrush}"/>
-                            </StackPanel>
-                            
-                            <!-- Test Connection Button -->
-                            <Button Grid.Row="4" Grid.Column="0" Content="Test Connection" 
-                                    Command="{Binding TestConnectionCommand}"
-                                    Style="{StaticResource GoldButton}" Width="150" HorizontalAlignment="Left"/>
+                            <!-- Operation Settings -->
+                            <Border Grid.Column="1" Style="{StaticResource Card}" Margin="12,0,0,16">
+                                <StackPanel>
+                                    <TextBlock Text="OPERATION SETTINGS" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,16"/>
+                                    <CheckBox Content="Stop on first error" IsChecked="{Binding StopOnError}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                                    <CheckBox Content="Generate LDIF backup before operations" IsChecked="{Binding GenerateLdifBackup}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                                    <CheckBox Content="Verbose logging" IsChecked="{Binding VerboseLogging}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                                    <CheckBox Content="Auto-validate after build" IsChecked="{Binding AutoValidate}" 
+                                              Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,12"/>
+                                    <StackPanel Margin="0,12,0,0">
+                                        <TextBlock Text="Operation Timeout (seconds)" Style="{StaticResource FieldLabel}"/>
+                                        <TextBox Text="{Binding OperationTimeout}" Style="{StaticResource InputBox}" Width="100" HorizontalAlignment="Left"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
                         </Grid>
+                        
+                        <!-- Configuration Management -->
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="CONFIGURATION MANAGEMENT" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Save or load your environment configuration to quickly switch between different test setups." 
+                                               Foreground="{StaticResource TextMutedBrush}" FontSize="12"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Button Content="Load Config" Command="{Binding LoadConfigCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
+                                    <Button Content="Save Config" Command="{Binding SaveConfigCommand}" Style="{StaticResource PrimaryButton}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
             
-            <!-- User Configuration Tab -->
-            <TabItem Header="👤 Users">
-                <Grid Margin="20">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-                        <TextBlock Text="User Configuration Sets" Style="{StaticResource GoldLabel}" FontSize="16" VerticalAlignment="Center"/>
-                        <Button Content="+ Add User Set" Command="{Binding AddUserSetCommand}"
-                                Style="{StaticResource GoldButton}" Margin="20,0,0,0"/>
-                    </StackPanel>
-                    
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding UserConfigs}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Background="#16213e" CornerRadius="8" Padding="15" Margin="0,0,0,10">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-                                            
-                                            <!-- Set Name & Enable -->
-                                            <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,10,10">
-                                                <TextBlock Text="Set Name" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                <TextBox Text="{Binding SetName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
-                                            </StackPanel>
-                                            
-                                            <!-- User Prefix -->
-                                            <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,0,5,10">
-                                                <TextBlock Text="Username Prefix" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                <TextBox Text="{Binding UserNamePrefix, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
-                                            </StackPanel>
-                                            
-                                            <!-- Start/End Numbers -->
-                                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="5,0,0,10">
-                                                <StackPanel Margin="0,0,10,0">
-                                                    <TextBlock Text="Start #" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                    <TextBox Text="{Binding StartNumber}" Style="{StaticResource DarkTextBox}" Width="60"/>
-                                                </StackPanel>
-                                                <StackPanel>
-                                                    <TextBlock Text="End #" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                    <TextBox Text="{Binding EndNumber}" Style="{StaticResource DarkTextBox}" Width="60"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                            
-                                            <!-- Delete Button -->
-                                            <Button Grid.Row="0" Grid.Column="3" Content="✕" 
-                                                    Command="{Binding DataContext.RemoveUserSetCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding}"
-                                                    Background="#aa3333" Foreground="White" Width="30" Height="30"
-                                                    VerticalAlignment="Top" Margin="10,15,0,0"/>
-                                            
-                                            <!-- User Context -->
-                                            <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,10">
-                                                <TextBlock Text="User Context (Container DN)" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                <TextBox Text="{Binding UserContext, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
-                                            </StackPanel>
-                                            
-                                            <!-- Password and Domain -->
-                                            <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,10,0">
-                                                <TextBlock Text="Default Password" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
-                                            </StackPanel>
-                                            
-                                            <StackPanel Grid.Row="2" Grid.Column="1" Margin="5,0,5,0">
-                                                <TextBlock Text="Domain Name" Foreground="{StaticResource AccentGoldBrush}" FontSize="11"/>
-                                                <TextBox Text="{Binding DomainName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource DarkTextBox}"/>
-                                            </StackPanel>
-                                            
-                                            <CheckBox Grid.Row="2" Grid.Column="2" Content="Enabled" 
-                                                      IsChecked="{Binding IsEnabled}"
-                                                      Foreground="{StaticResource TextLightBrush}" 
-                                                      VerticalAlignment="Bottom" Margin="10,0,0,5"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </Grid>
-            </TabItem>
-            
-            <!-- Output Settings Tab -->
-            <TabItem Header="📄 Output">
-                <StackPanel Margin="20">
-                    <TextBlock Text="Output Settings" Style="{StaticResource GoldLabel}" FontSize="16" Margin="0,0,0,15"/>
-                    
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="LDIF Export Path" Style="{StaticResource GoldLabel}"/>
-                        <TextBox Text="{Binding Configuration.LdifExportPath, UpdateSourceTrigger=PropertyChanged}" 
-                                 Style="{StaticResource DarkTextBox}"/>
-                    </StackPanel>
-                    
-                    <StackPanel Margin="0,0,0,15">
-                        <TextBlock Text="Log File Path" Style="{StaticResource GoldLabel}"/>
-                        <TextBox Text="{Binding Configuration.LogFilePath, UpdateSourceTrigger=PropertyChanged}" 
-                                 Style="{StaticResource DarkTextBox}"/>
-                    </StackPanel>
-                    
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <CheckBox Content="Write Only (Generate LDIF without importing)" 
-                                  IsChecked="{Binding Configuration.WriteOnlyMode}"
-                                  Foreground="{StaticResource TextLightBrush}" Margin="0,0,20,0"/>
-                        <CheckBox Content="Delete Mode (Remove objects)" 
-                                  IsChecked="{Binding Configuration.DeleteMode}"
-                                  Foreground="{StaticResource TextLightBrush}"/>
-                    </StackPanel>
-                    
-                    <Button Content="Generate LDIF Only" Command="{Binding GenerateLdifCommand}"
-                            Style="{StaticResource GoldButton}" Width="180" HorizontalAlignment="Left"/>
-                </StackPanel>
-            </TabItem>
-            
-            <!-- Log Tab -->
-            <TabItem Header="📋 Log">
-                <Grid Margin="20">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Operation Log" Style="{StaticResource GoldLabel}" FontSize="16" Margin="0,0,0,10"/>
-                    
-                    <ListBox Grid.Row="1" ItemsSource="{Binding LogMessages}"
-                             Background="#16213e" Foreground="{StaticResource TextLightBrush}"
-                             BorderBrush="#3a3a5e" BorderThickness="1"
-                             FontFamily="Consolas" FontSize="12"/>
-                </Grid>
-            </TabItem>
         </TabControl>
         
-        <!-- Progress Bar -->
-        <ProgressBar Grid.Row="2" Height="4" Value="{Binding ProgressValue}" Maximum="100"
-                     Background="#16213e" Foreground="{StaticResource AccentGoldBrush}" BorderThickness="0"/>
-        
-        <!-- Footer with Action Buttons -->
-        <Border Grid.Row="3" Background="#16213e" Padding="20,15">
+        <!-- Footer Status Bar -->
+        <Border Grid.Row="2" Background="#161b22" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="24,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <!-- Status -->
-                <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextMutedBrush}" 
-                           VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
                 
-                <!-- Action Buttons -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="Reset All" Command="{Binding ResetAllCommand}"
-                            Background="#3a3a5e" Foreground="{StaticResource TextLightBrush}"
-                            Padding="15,8" Margin="0,0,10,0" BorderThickness="0" Cursor="Hand"/>
-                    <Button Content="Load Config" Command="{Binding LoadConfigurationCommand}"
-                            Background="#3a3a5e" Foreground="{StaticResource TextLightBrush}"
-                            Padding="15,8" Margin="0,0,10,0" BorderThickness="0" Cursor="Hand"/>
-                    <Button Content="Save Config" Command="{Binding SaveConfigurationCommand}"
-                            Background="#3a3a5e" Foreground="{StaticResource TextLightBrush}"
-                            Padding="15,8" Margin="0,0,10,0" BorderThickness="0" Cursor="Hand"/>
-                    <Button Content="⚔️ RUN UPDATE" Command="{Binding RunUpdateCommand}"
-                            Style="{StaticResource GoldButton}" FontSize="14"
-                            IsEnabled="{Binding IsProcessing, Converter={x:Static local:InverseBoolConverter.Instance}}"/>
-                </StackPanel>
+                <ProgressBar Grid.Column="1" Width="200" Height="6" Value="{Binding OverallProgress}" Maximum="100"
+                             Background="#21262d" Foreground="{StaticResource AccentGoldBrush}" BorderThickness="0"
+                             Visibility="{Binding IsProcessing, Converter={x:Static local:BoolToVisibilityConverter.Instance}}"
+                             Margin="0,0,16,0"/>
+                
+                <TextBlock Grid.Column="2" Text="v1.0.0" Foreground="{StaticResource TextMutedBrush}" VerticalAlignment="Center"/>
             </Grid>
         </Border>
     </Grid>

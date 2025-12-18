@@ -1,37 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Environment Builder - Modern test environment creation tool -->
-    <!-- Modernized from TreeBuilder 3.4 by Robert Foster -->
+    <!-- Environment Builder - Unified Test Environment Creation Tool -->
+    <!-- All functionality in one tabbed application -->
+    <!-- Evolved from TreeBuilder 3.4 by Robert Foster -->
+    <!-- Test Brutally - Build Your Level of Complexity -->
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <!-- Icon will be added after ICO conversion -->
-    <!-- <ApplicationIcon>Resources\TestTree.ico</ApplicationIcon> -->
+    
+    <!-- Application Info -->
     <Title>Environment Builder</Title>
     <Authors>Robert Foster</Authors>
     <Company>Test Warrior</Company>
     <Product>Environment Builder</Product>
-    <Description>A modern test environment creation tool for building LDAP directory structures, users, and home directories. Evolved from TreeBuilder 3.4 with enhanced functionality.</Description>
+    <Description>A unified test environment creation tool for building LDAP directory structures, users, and home directories. Features complexity presets, real-time monitoring, validation, cleanup, and reporting. Evolved from TreeBuilder 3.4.</Description>
     <Version>1.0.0</Version>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
+    
+    <!-- Publishing Settings for Self-Contained Executable -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- LDAP/Directory Services for modern LDAP operations -->
+    <!-- LDAP/Directory Services -->
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
     <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
     
-    <!-- JSON configuration support -->
+    <!-- JSON configuration -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     
-    <!-- CSV import support -->
+    <!-- CSV support -->
     <PackageReference Include="CsvHelper" Version="31.0.0" />
     
-    <!-- MVVM Community Toolkit for clean architecture -->
+    <!-- MVVM toolkit -->
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     
     <!-- Modern UI controls -->
@@ -40,11 +49,6 @@
     <!-- Logging -->
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Include the Spartan Tree icon -->
-    <Resource Include="Resources\TestTree.svg" />
   </ItemGroup>
 
 </Project>
